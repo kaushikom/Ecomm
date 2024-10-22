@@ -4,11 +4,12 @@ import useStore from '../store/store';
 import { LayoutGrid, Bot, BrainCircuit, Megaphone, CodeXml, Star } from 'lucide-react';
 
 const Services = () => {
-  const { categories } = useStore();
+  const { categories,cat } = useStore();
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [filteredTasks, setFilteredTasks] = useState([]);
 
   useEffect(() => {
+    console.log("All categories",cat)
     if (selectedCategory === 'All') {
       setFilteredTasks(categories.flatMap(category => 
         category.tasks.map(task => ({ ...task, categoryId: category.id }))

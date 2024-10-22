@@ -1,10 +1,12 @@
 import { create } from "zustand";
 import axios from "axios";
 
-const useStore = create((set) => ({
+const useStore = create((set, get) => ({
   user: null,
   error: null,
   isLoggedIn: false,
+  cat: [],
+  // User actions
   login: async (email, password) => {
     try {
       const response = await axios.post(
@@ -16,6 +18,46 @@ const useStore = create((set) => ({
       );
       set({ user: response.data.user, error: null, isLoggedIn: true }); // adjust based on your response structure
       localStorage.setItem("token", response.data.token);
+      return response.data.user;
+    } catch (error) {
+      const errorMessage =
+        error.response && error.response.data && error.response.data.error
+          ? error.response.data.error
+          : "Login failed"; // Get error message from response
+      set({ error: errorMessage });
+      throw new Error(errorMessage);
+    }
+  },
+  updatePwd: async (userId, oldPassword, newPassword) => {
+    try {
+      const response = await axios.post(
+        "http://localhost:4000/api/user/updatePwd",
+        { userId, oldPassword, newPassword }
+      );
+      set({ user: response.data.user, error: null, isLoggedIn: true });
+      return response.data;
+    } catch (error) {
+      const errorMessage =
+        error.response && error.response.data && error.response.data.error
+          ? error.response.data.error
+          : "Login failed"; // Get error message from response
+      set({ error: errorMessage });
+      throw new Error(errorMessage);
+    }
+  },
+  update: async (userId, lastName, company, location) => {
+    try {
+      const response = await axios.post(
+        "http://localhost:4000/api/user/update",
+        {
+          userId,
+          lastName,
+          company,
+          location,
+        }
+      );
+      set({ user: response.data.user, error: null, isLoggedIn: true });
+      return response.data;
     } catch (error) {
       const errorMessage =
         error.response && error.response.data && error.response.data.error
@@ -46,7 +88,103 @@ const useStore = create((set) => ({
       throw new Error(errorMessage);
     }
   },
+  getUser: async (userId) => {
+    try {
+      const response = await axios.post(
+        "http://localhost:4000/api/user/getUser",
+        {
+          userId,
+        }
+      );
+      set({ user: response.data, error: null });
+    } catch (error) {
+      const errorMessage =
+        error.response && error.response.data && error.response.data.error
+          ? error.response.data.error
+          : "SignUp failed"; // Get error message from response
+      set({ error: errorMessage });
+      throw new Error(errorMessage);
+    }
+  },
   logout: () => set({ user: null }),
+
+  // Categories actions
+  getAllCat: async () => {
+    try {
+      const response = await axios.get(
+        "http://localhost:4000/api/category/fetchAll"
+      );
+      set({ cat: response.data.categories });
+      return response.data.categories;
+    } catch (error) {
+      const errorMessage =
+        error.response && error.response.data && error.response.data.error
+          ? error.response.data.error
+          : "SignUp failed"; // Get error message from response
+      set({ error: errorMessage });
+      throw new Error(errorMessage);
+    }
+  },
+  addNewCat: async (name, imageUrl, navDisplay, description) => {
+    try {
+      const response = await axios.post(
+        "http://localhost:4000/api/category/add",
+        {
+          name,
+          imageUrl,
+          navDisplay,
+          description,
+        }
+      );
+      const currentCat = get().cat;
+      set({
+        cat: [...currentCat, response.data.category],
+        error: null,
+      });
+      return response.data;
+    } catch (error) {
+      throw new Error(error.message);
+    }
+  },
+  deleteCat: async (id) => {
+    try {
+      const response = await axios.post(
+        "http://localhost:4000/api/category/delete",
+        {
+          id,
+        }
+      );
+      const currentCat = get().cat;
+      set({
+        cat: currentCat.filter((c) => c._id !== response.data.category._id),
+        error: null,
+      });
+      return response.data;
+    } catch (error) {
+      set({ error });
+      throw new Error(error.message);
+    }
+  },
+  updateCat: async (id, name, imageUrl, navDisplay, description) => {
+    try {
+      const response = await axios.put(
+        "http://localhost:4000/api/category/update",
+        {
+          id,
+          name,
+          imageUrl,
+          navDisplay,
+          description,
+        }
+      );
+      set((state) => ({
+        cat: state.cat.map((c) => (c._id === id ? response.data.category : c)),
+      }));
+      return response.data.category;
+    } catch (error) {
+      throw new Error(error.message);
+    }
+  },
   categories: [
     {
       id: 1,

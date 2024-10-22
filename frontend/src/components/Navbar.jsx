@@ -8,8 +8,6 @@ const Navbar = () => {
   const cart = useStore((state) => state.cart);
   const itemCount = cart.length;
 
-  useEffect(() => console.log(itemCount), [itemCount]);
-
   const toggleMenu = () => setIsOpen(!isOpen);
 
   const menuItems = [

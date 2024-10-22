@@ -2,6 +2,7 @@ import express, { urlencoded } from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import { userRouter } from "./routes/userRoutes.js";
+import { categoryRouter } from "./routes/categoryRoutes.js";
 
 const app = express();
 // Middlewares
@@ -18,5 +19,6 @@ app.use(cookieParser());
 
 // Routers
 app.use("/api/user", userRouter);
+app.use("/api/category", categoryRouter);
 
 export { app };

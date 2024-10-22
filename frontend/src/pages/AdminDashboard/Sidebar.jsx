@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { BarChart, FileCheck, Clock4, History, UserPen, LogOut, Menu, X } from 'lucide-react';
+import { LayoutGrid, FileCheck, Clock4, History, UserPen, LogOut, Menu, X } from 'lucide-react';
 
 const Sidebar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -11,6 +11,7 @@ const Sidebar = () => {
     { name: 'Tasks', icon: FileCheck, path: '/admin/tasks' },
     { name: 'Track Tasks', icon: Clock4, path: '/admin/track' },
     { name: 'Payments', icon: History, path: '/admin/payments' },
+    {name:'Categories', icon:LayoutGrid, path:'/admin/categories'}
     // { name: 'Account', icon: UserPen, path: '/admin/account' },
   ];
 

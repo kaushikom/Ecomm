@@ -9,10 +9,28 @@ const categorySchema = new Schema({
     type: String,
     required: true,
   },
-  desription: {
+  navDisplay: {
+    type: Boolean,
+    default: false,
+  },
+  description: {
     type: String,
     required: true,
   },
 });
+// static method to insert new categories
+categorySchema.statics.addNew = async function (name, imageUrl, description) {
+  if (!name || !imageUrl || !description) {
+    throw Error("Please fill required fields");
+  }
+  const match = await this.findOne({ name });
+  if (match) throw Error("Another Category with same name exists");
+  const category = await this.create({
+    name,
+    imageUrl,
+    description,
+  });
+  return category;
+};
 
 export const Category = mongoose.model("Category", categorySchema);

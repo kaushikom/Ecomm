@@ -28,6 +28,9 @@ const userSchema = new Schema(
       type: String,
       required: [true, "Password is required"],
     },
+    type: {
+      type: String,
+    },
     refreshToken: {
       type: String,
     },
@@ -80,6 +83,49 @@ userSchema.statics.login = async function (email, password) {
   if (!match) {
     throw Error("Incorrect Password");
   }
+  return user;
+};
+// static method to update profile information
+userSchema.statics.updateProfile = async function (
+  userId,
+  lastName,
+  company,
+  location
+) {
+  const user = await this.findById(userId);
+  if (!user) {
+    throw Error("User not found");
+  }
+
+  // Update fields
+  if (lastName) user.lastName = lastName;
+  if (company) user.company = company;
+  if (location) user.location = location;
+
+  // Save the updated user
+  await user.save();
+
+  return user;
+};
+// static method to update password information
+userSchema.statics.updatePwd = async function (
+  userId,
+  oldPassword,
+  newPassword
+) {
+  const user = await this.findById(userId);
+  const match = await bcrypt.compare(oldPassword, user.password);
+  if (!match) {
+    throw Error("Please enter correct old password");
+  }
+  if (user.password == newPassword || !newPassword) {
+    throw Error("Please enter a new password");
+  }
+  // Update password
+  const salt = await bcrypt.genSalt(10);
+  const hash = await bcrypt.hash(newPassword, salt);
+  user.password = hash;
+  await user.save();
   return user;
 };
 

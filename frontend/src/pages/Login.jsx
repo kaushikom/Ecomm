@@ -21,9 +21,13 @@ const navigate = useNavigate();
                 return data.message
             }
         }
-    }).then(async()=>{
+    }).then(async(res)=>{
          await delay(1500);
-        navigate('/services')
+        if(res.type == 'admin'){
+         navigate('/admin/tasks')
+        }else{
+          navigate('/services')
+        }
     })
 }
 
