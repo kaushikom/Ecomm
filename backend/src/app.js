@@ -3,6 +3,7 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 import { userRouter } from "./routes/userRoutes.js";
 import { categoryRouter } from "./routes/categoryRoutes.js";
+import { serviceRouter } from "./routes/serviceRoutes.js";
 
 const app = express();
 // Middlewares
@@ -20,5 +21,6 @@ app.use(cookieParser());
 // Routers
 app.use("/api/user", userRouter);
 app.use("/api/category", categoryRouter);
+app.use("/api/service", serviceRouter);
 
 export { app };

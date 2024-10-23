@@ -21,6 +21,10 @@ const serviceSchema = new Schema({
     type: String,
     required: true,
   },
+  description: {
+    type: String,
+    required: true,
+  },
 });
 
 export const Service = mongoose.model("Service", serviceSchema);
