@@ -1,18 +1,17 @@
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { LayoutGrid, FileCheck, Clock4, History, UserPen, LogOut, Menu, X } from 'lucide-react';
+import { LayoutGrid, FileCheck, Clock4, History, LogOut, Menu, X, Layers } from 'lucide-react';
 
 const Sidebar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
 
   const menuItems = [
-    // { name: 'Dashboard', icon: BarChart, path: '/admin' },
     { name: 'Tasks', icon: FileCheck, path: '/admin/tasks' },
     { name: 'Track Tasks', icon: Clock4, path: '/admin/track' },
     { name: 'Payments', icon: History, path: '/admin/payments' },
-    {name:'Categories', icon:LayoutGrid, path:'/admin/categories'}
-    // { name: 'Account', icon: UserPen, path: '/admin/account' },
+    {name:'Categories', icon:LayoutGrid, path:'/admin/categories'},
+    {name:'Services',icon: Layers, path:'/admin/services'}
   ];
 
   const toggleSidebar = () => setIsOpen(!isOpen);

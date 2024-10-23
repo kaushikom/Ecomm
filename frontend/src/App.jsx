@@ -26,6 +26,7 @@ import Login from './pages/Login';
 import 'react-toastify/dist/ReactToastify.css'; // Import Toastify CSS
 import ToastContainer from 'rsuite/esm/toaster/ToastContainer';
 import ProtectedRoute from './components/ProtectedRoute';
+import AdminServices from './pages/AdminDashboard/AdminServices';
 
 const App = () => {
  const {getAllCat} = useStore();
@@ -62,6 +63,7 @@ const App = () => {
              <Route path="/admin/track" element={<AdminTrack />} />
              <Route path="/admin/payments" element={<AdminPayments />} />
              <Route path="/admin/categories" element={<Categories />} />
+             <Route path="/admin/services" element={<AdminServices />} />
             </Route>
             
             {/*User Protected Routes */}

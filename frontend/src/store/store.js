@@ -6,6 +6,8 @@ const useStore = create((set, get) => ({
   error: null,
   isLoggedIn: false,
   cat: [],
+  services: [],
+
   // User actions
   login: async (email, password) => {
     try {
@@ -337,6 +339,69 @@ const useStore = create((set, get) => ({
     },
     // Add more sample blog posts here
   ],
+
+  // Services actions
+  getServices: async (categoryId) => {
+    try {
+      let url = "http://localhost:4000/api/service/fetchByCategory";
+      if (categoryId) {
+        url = `http://localhost:4000/api/service/fetchByCategory/${categoryId}`;
+      }
+      const response = await axios.get(url);
+      set({ services: response.data.services });
+    } catch (error) {
+      throw new Error(error.message);
+    }
+  },
+  addService: async (
+    name,
+    categoryId,
+    minPrice,
+    maxPrice,
+    imageUrl,
+    description
+  ) => {
+    try {
+      const response = await axios.post(
+        "http://localhost:4000/api/service/addNew",
+        { name, categoryId, minPrice, maxPrice, imageUrl, description }
+      );
+      return response.success;
+    } catch (error) {
+      throw new Error(error.message);
+    }
+  },
+  updateService: async (
+    id,
+    name,
+    minPrice,
+    maxPrice,
+    imageUrl,
+    description
+  ) => {
+    try {
+      const response = await axios.put(
+        `http://localhost:4000/api/service/update`,
+        { id, name, minPrice, maxPrice, imageUrl, description }
+      );
+      return response.success;
+    } catch (error) {
+      throw new Error(error.message);
+    }
+  },
+  deleteService: async (id) => {
+    console.log("Delete function triggered");
+    try {
+      const response = await axios.delete(
+        `http://localhost:4000/api/service/delete/${id}`
+      );
+      console.log(id);
+      return response.success;
+    } catch (error) {
+      throw new Error(error.message);
+    }
+  },
+
   // Cart actions and state
   cart: [],
   addToCart: (categoryId, item) =>

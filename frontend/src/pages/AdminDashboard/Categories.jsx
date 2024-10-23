@@ -57,7 +57,7 @@ const Modal = ({ showModal, handleClose, editData }) => {
   };
 
   return (
-    <form onSubmit={handleFormSubmit} className={`fixed top-20 px-4 bg-white py-2 left-1/2 -translate-x-1/2 border-2 border-black min-w-[200px] ${showModal ? 'block' : 'hidden'}`}>
+    <form onSubmit={handleFormSubmit} className={`fixed shadow-2xl top-20 px-4 bg-white py-2 left-1/2 -translate-x-1/2 border-2 border-black min-w-[200px] ${showModal ? 'block' : 'hidden'}`}>
       <h1 className='text-2xl font-semibold'>{editData ? 'Edit Category' : 'Category Details'}</h1>
       <input type="text" value={name} onChange={(e)=>setName(e.target.value)} className='w-full p-2 my-2 bg-gray-200 rounded-md' placeholder='Name' />
       <input type="text" value={url} onChange={e=>setUrl(e.target.value)} className='w-full p-2 my-2 bg-gray-200 rounded-md' placeholder='Image URL' />

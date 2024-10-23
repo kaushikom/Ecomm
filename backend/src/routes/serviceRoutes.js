@@ -15,7 +15,7 @@ serviceRouter.get("/fetchByCategory", fetchServicesByCategory);
 // Fetch services by category
 serviceRouter.get("/fetchByCategory/:id", fetchServicesByCategory);
 // Delete a service
-serviceRouter.delete("/delete", deleteService);
+serviceRouter.delete("/delete/:id", deleteService);
 // Update service
 serviceRouter.put("/update", updateService);
 

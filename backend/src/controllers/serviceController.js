@@ -90,7 +90,7 @@ const fetchServicesByCategory = async (req, res) => {
       message: services.length
         ? "Services fetched successfully"
         : "No services found",
-      data: services,
+      services,
     });
   } catch (error) {
     return res.status(500).json({
@@ -105,7 +105,7 @@ const fetchServicesByCategory = async (req, res) => {
 // TODO : Don't delete a service with active tasks
 const deleteService = async (req, res) => {
   try {
-    const { id } = req.body;
+    const { id } = req.params;
     const deletedService = await Service.findByIdAndDelete(id);
     res.status(200).json({
       success: true,
