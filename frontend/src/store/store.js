@@ -1,5 +1,7 @@
 import { create } from "zustand";
+import { persist } from "zustand/middleware";
 import axios from "axios";
+import { Trophy } from "lucide-react";
 
 const useStore = create((set, get) => ({
   user: null,
@@ -7,6 +9,8 @@ const useStore = create((set, get) => ({
   isLoggedIn: false,
   cat: [],
   services: [],
+  tasks: [],
+  payments: [],
 
   // User actions
   login: async (email, password) => {
@@ -349,6 +353,7 @@ const useStore = create((set, get) => ({
       }
       const response = await axios.get(url);
       set({ services: response.data.services });
+      // console.log(response.data.services);
     } catch (error) {
       throw new Error(error.message);
     }
@@ -390,7 +395,6 @@ const useStore = create((set, get) => ({
     }
   },
   deleteService: async (id) => {
-    console.log("Delete function triggered");
     try {
       const response = await axios.delete(
         `http://localhost:4000/api/service/delete/${id}`
@@ -402,6 +406,129 @@ const useStore = create((set, get) => ({
     }
   },
 
+  // Task actions
+  addTask: async (serviceId, userId, message) => {
+    try {
+      const response = await axios.post("http://localhost:4000/api/task/add", {
+        serviceId,
+        userId,
+        message,
+      });
+      return response.success;
+    } catch (error) {
+      throw new Error(error.message);
+    }
+  },
+  getAllTasks: async () => {
+    try {
+      const response = await axios.get("http://localhost:4000/api/task/get");
+      set({ tasks: response.data.tasks });
+    } catch (error) {
+      throw new Error(error.message);
+    }
+  },
+  getTasksByStatus: async (status) => {
+    try {
+      const response = await axios.get(
+        `http://localhost:4000/api/task/getByStatus/${status}`
+      );
+      set({ tasks: response.data.tasks });
+    } catch (error) {
+      throw new Error(error.message);
+    }
+  },
+  getTasksByUser: async (id) => {
+    try {
+      const response = await axios.get(
+        `http://localhost:4000/api/task/getByUser/${id}`
+      );
+      set({ tasks: response.data.tasks });
+    } catch (error) {
+      throw new Error(error.message);
+    }
+  },
+  updateTaskStatus: async (id, newStatus) => {
+    try {
+      await axios.put("http://localhost:4000/api/task/update", {
+        id,
+        newStatus,
+      });
+    } catch (error) {
+      throw new Error(error.message);
+    }
+  },
+  deleteTask: async (id) => {
+    try {
+      await axios.delete(`http://localhost:4000/api/task/delete/${id}`);
+    } catch (error) {
+      throw new Error(error.message);
+    }
+  },
+  // Payments actions
+  getPaymentsByUser: async (userId) => {
+    try {
+      const response = await axios.get(
+        `http://localhost:4000/api/payment/fetch/${userId}`
+      );
+      set({ payments: response.data.data });
+      // console.log(response.data.data);
+    } catch (error) {
+      throw new Error(error.message);
+    }
+  },
+  getPaymentsByTask: async (taskId) => {
+    try {
+      const response = await axios.get(
+        `http://localhost:4000/api/payment/fetchByTask/${taskId}`
+      );
+      set({ payments: response.data.payments });
+      return response.data.task;
+    } catch (error) {
+      throw new Error(error.message);
+    }
+  },
+  addPayments: async (taskId, amount, milestone, description) => {
+    try {
+      const response = await axios.post(
+        "http://localhost:4000/api/payment/addNew",
+        {
+          task: taskId,
+          amount,
+          milestone,
+          description,
+        }
+      );
+      console.log(response.data.message);
+    } catch (error) {
+      throw new Error(error);
+    }
+  },
+  deletePayment: async (paymentId) => {
+    try {
+      const response = await axios.delete(
+        `http://localhost:4000/api/payment/delete/${paymentId}`
+      );
+      console.log(response);
+    } catch (error) {
+      throw new Error(error);
+    }
+  },
+  updatePayment: async (paymentId, amount, milestone, description) => {
+    try {
+      const response = await axios.post(
+        "http://localhost:4000/api/payment/update",
+        {
+          paymentId,
+          amount,
+          milestone,
+          description,
+        }
+      );
+      console.log(response);
+    } catch (error) {
+      throw new Error(error.message);
+    }
+  },
   // Cart actions and state
   cart: [],
   addToCart: (categoryId, item) =>

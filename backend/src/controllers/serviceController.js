@@ -3,6 +3,7 @@ import { Category } from "../models/category.model.js";
 
 // Add new service
 const addNewService = async (req, res) => {
+  console.log(req.body);
   try {
     const { name, categoryId, minPrice, maxPrice, imageUrl, description } =
       req.body;
@@ -30,7 +31,7 @@ const addNewService = async (req, res) => {
     // Check if category exists
     const category = await Category.findById(categoryId);
     if (!category) {
-      res.status(400).json({
+      return res.status(400).json({
         success: false,
         message: "Category not found",
       });

@@ -26,7 +26,13 @@ const navigate = useNavigate();
         if(res.type == 'admin'){
          navigate('/admin/tasks')
         }else{
-          navigate('/services')
+          const redirectPath = localStorage.getItem('redirectAfterLogin');
+  if (redirectPath) {
+    localStorage.removeItem('redirectAfterLogin');
+    navigate(redirectPath);
+  } else{
+    navigate('/services')
+  }
         }
     })
 }

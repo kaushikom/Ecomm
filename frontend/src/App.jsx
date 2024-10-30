@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import useStore from './store/store';
 import Navbar from './components/Navbar';
@@ -9,10 +9,7 @@ import Cart from './pages/Cart';
 import SignUpComponent from './pages/SignUp';
 import BlogPage from './pages/Blogs';
 import BlogDetailPage from './pages/BlogDetailPage';
-import IT from './pages/IT';
-import AI from './pages/AI';
-import Automation from './pages/Automation';
-import Marketing from './pages/Marketing';
+import Category from './pages/Category';
 import Footer from './components/Footer';
 import Tasks from './pages/UserDashboard/Tasks';
 import AdminTasks from './pages/AdminDashboard/AdminTasks'
@@ -27,15 +24,55 @@ import 'react-toastify/dist/ReactToastify.css'; // Import Toastify CSS
 import ToastContainer from 'rsuite/esm/toaster/ToastContainer';
 import ProtectedRoute from './components/ProtectedRoute';
 import AdminServices from './pages/AdminDashboard/AdminServices';
+import { LoaderCircle, ServerCrash } from 'lucide-react';
+import Success from './pages/Success';
+import Failed from './pages/Failed';
 
 const App = () => {
- const {getAllCat} = useStore();
+ const {getAllCat, getServices} = useStore();
+ const [loading,setLoading] = useState(true);
+ const [error,setError] = useState(false);
  useEffect(()=>{
-  async function setCategories(){
-    await getAllCat()
-  }
   setCategories();
+  setServices();
  },[])
+
+ const setCategories = async() =>{
+  setLoading(true);
+    try {
+      await getAllCat()
+    } catch (error) {
+      console.log("Error whle fetching categories: ", error)
+      setError(true);
+    }finally{
+      setLoading(false);
+    }
+  }
+ const setServices = async() => {
+  setLoading(true);
+try {
+  await getServices();
+} catch (error) {
+  console.log("Error while fetching services: ", error)
+  setError(true)
+}finally{
+  setLoading(false);
+}
+  }
+
+
+  if(loading) return (
+    <div className='flex items-center justify-center min-h-screen bg-gray-100'>
+      <div className='animate-spin'><LoaderCircle size={80}/></div>
+    </div>
+  )
+  if(error) return(
+    <div className='flex flex-col items-center justify-center min-h-screen gap-4 bg-gray-100'>
+      <ServerCrash size={50} />
+      <h1 className='text-lg text-center'>An error occured! <br />Check the console for more details</h1>
+    </div>
+  )
+
   return (
     <Router>
       <div className="min-h-screen bg-gray-100 dm-sans">
@@ -44,19 +81,17 @@ const App = () => {
         <main className="container px-4 py-8 mx-auto">
           <Routes>
             <Route path="/" element={<Home />} />
-            <Route path="/services/:categoryId/:taskId" element={<ServiceDetails />} />
+            <Route path="/category/:categoryId" element={<Category />} />
+            <Route path="/services/:serviceId" element={<ServiceDetails />} />
             <Route path="/services" element={<Services />} />
             <Route path="/signup" element={<SignUpComponent />} />
             <Route path="/blogs" element={<BlogPage />} />
-            <Route path="/blogs/:blogId" element={<BlogDetailPage />} />
-            <Route path="/it" element={<IT />} />
-            <Route path="/ai" element={<AI />} />
-            <Route path="/automation" element={<Automation />} />
-            <Route path="/marketing" element={<Marketing />} />        
+            <Route path="/blogs/:blogId" element={<BlogDetailPage />} />        
             <Route path="/login" element={<Login />} />
-            {/* TODO
-            Seperate user protected routes from admin protected routes
-            */}
+            <Route path="/success" element={<Success />} />
+            <Route path="/failed" element={<Failed />} />
+
+           {/* Admin protected Routes */}
             <Route element={<ProtectedRoute loginPage="/login" />}>
             <Route path='/admin' element={<AdminTasks/>}/>
              <Route path="/admin/tasks" element={<AdminTasks />} />

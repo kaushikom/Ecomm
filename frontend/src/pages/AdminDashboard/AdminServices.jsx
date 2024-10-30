@@ -61,11 +61,12 @@ const Modal = ({ showModal, handleClose, editData }) => {
         await updateService(editData._id, formData.name,formData.minPrice, formData.maxPrice,formData.imageUrl,formData.description);
         toast.success('Service updated successfully');
       } else {
+        console.log(formData);
         await addService(
           formData.name,
           formData.categoryId,
-          formData.minPrice,
-          formData.maxPrice,
+          Number(formData.minPrice),
+          Number(formData.maxPrice),
           formData.imageUrl,
           formData.description
         );
@@ -210,8 +211,8 @@ const CategoryToggles = () => {
       <span className="relative">All</span></button>
       {cat.map(c=>{
         return(
-          <button style={{background:`url(${c.imageUrl})`, backgroundSize:"cover",backgroundPosition:"center", backgroundRepeat:"no-repeat"}} className="relative px-4 py-2 overflow-hidden text-white transition-all rounded-lg shadow-lg shadow-gray-400 hover:scale-105" key={c._id} onClick={()=>handleCategoryToggle(c._id)}>
-            <div className="absolute inset-0 bg-gradient-to-t from-black to-transparent"></div><span className="relative">{c.name}</span></button>
+          <button style={{background:`url(${c.imageUrl})`, backgroundSize:"cover",backgroundPosition:"center", backgroundRepeat:"no-repeat"}} className="relative px-4 py-2 overflow-hidden text-white transition-all rounded-lg shadow-lg shadow-gray-400 group" key={c._id} onClick={()=>handleCategoryToggle(c._id)}>
+            <div className="absolute inset-0 group-hover:opacity-65 bg-gradient-to-t from-black to-transparent"></div><span className="relative font-bold">{c.name}</span></button>
         )
       })}
 

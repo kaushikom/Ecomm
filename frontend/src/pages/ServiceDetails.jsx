@@ -4,9 +4,8 @@ import useStore from '../store/store'; // Import Zustand store
 import ServiceFeatures from '../components/ServiceFeature';
 import { useNavigate } from 'react-router-dom';
 import { ChevronDown } from 'lucide-react';
-import {Slider} from 'rsuite'
 import ReviewSection from '../components/ReviewSection';
-import 'rsuite/Slider/styles/index.css';
+import { toast, ToastContainer } from 'react-toastify';
 
 const FAQAccordion = () => {
   const [openIndex, setOpenIndex] = useState(null);
@@ -58,34 +57,39 @@ const FAQAccordion = () => {
 };
 
 const ServiceDetails = () => {
-   const { categoryId, taskId } = useParams();
-  const [quantity, setQuantity] = useState(1);
+  const {serviceId} = useParams();
+  const {services, user, addTask} = useStore();
+  const thisService = services.find(service=>service._id == serviceId);
   const navigate = useNavigate();
-  
-  const categories = useStore((state) => state.categories);
-  const addToCart = useStore((state) => state.addToCart);
-  const cart = useStore((state) => state.cart);
-  
-  const category = categories.find((cat) => cat.id === parseInt(categoryId));
-  const service = category?.tasks.find((task) => task.id === parseInt(taskId));
-  const [selectedPrice, setSelectedPrice] = useState(service.maxPrice);
+  const [showBookingForm, setShowBookingForm] = useState(false);
+  const [bookingMessage, setBookingMessage] = useState('');
 
-  // Set the default selected price to the minimum price when the component loads
-  useEffect(() => {
-    if (service) {
-      setSelectedPrice(service.minPrice);
+    const handleBookClick = () => {
+    if (!user) {
+      // Store the current URL in localStorage before redirecting
+      localStorage.setItem('redirectAfterLogin', window.location.pathname);
+      navigate('/login');
+      return;
     }
-  }, [service]);
-
-  const handleAddToCart = () => {
-    console.log(`Added ${quantity} ${service.name} to cart for $${selectedPrice}`);
-    console.log(service)
-    addToCart(category.id,service);
-    console.log(cart);
-      navigate('/cart');
+    setShowBookingForm(true);
   };
 
-  if (!service) {
+    const handleSubmitBooking = async() => {
+   
+      try {
+        await addTask(serviceId, user._id, bookingMessage);
+        toast.success("Submitted")
+      } catch (error) {
+        toast.error(error.message);
+      }finally{
+        setBookingMessage('');
+        setShowBookingForm(false);
+      }
+  
+  };
+
+
+  if (!thisService) {
     return <div>Service not found</div>;
   }
 
@@ -95,8 +99,8 @@ const ServiceDetails = () => {
         {/* Left Section: Image */}
         <div className="w-1/2">
           <img
-            src={service.image}
-            alt={service.name}
+            src={thisService.imageUrl}
+            alt={thisService.name}
             className="object-cover w-full rounded-lg shadow-md h-96"
           />
           <div className="flex gap-4 mt-8">
@@ -121,78 +125,52 @@ const ServiceDetails = () => {
 
         {/* Right Section: Details */}
         <div className="w-1/2 pl-10">
-          <h1 className="mb-4 text-4xl font-bold">{service.name}</h1>
-          <p className="mb-6 text-gray-600">{service.description}</p>
+          <h1 className="mb-4 text-4xl font-bold">{thisService.name}</h1>
 
-          {/* Price Range Section */}
-          {/* <div className="mb-6">
-            <label className="block mb-2 text-lg font-semibold">
-              Select Price: ${selectedPrice}
-            </label>
-            <div className="w-full sm:w-1/2">
-            <Slider
-          progress
-          style={{ marginTop: 16, marginBottom : 16 }}
-          min={service.minPrice}
-          max={service.maxPrice}
-          value={selectedPrice}
-          onChange={value => {
-            setSelectedPrice(value);
-          }}
-        />
-            </div>
-            <div className="flex justify-between text-gray-600 sm:w-1/2">
-              <span>${service.minPrice}</span>
-              <span>${service.maxPrice}</span>
-            </div>
-            <p className="mt-4 font-bold text-gray-500 text-md">
-              *Our prices are dependent on the complexity of the project
-            </p>
-          </div> */}
-          <div>Price : ${service.minPrice} - ${service.maxPrice}</div>
 
-          {/* Quantity Input */}
-          {/* <div className="flex items-center mb-6">
-            <label htmlFor="quantity" className="mr-4 text-lg font-semibold">
-              Quantity:
-            </label>
-            <input
-              type="number"
-              id="quantity"
-              min="1"
-              value={quantity}
-              onChange={(e) => setQuantity(parseInt(e.target.value))}
-              className="w-16 px-3 py-2 text-center border rounded"
-            />
-          </div> */}
-
-          {/* Action Buttons */}
-          <div className="flex mb-6 space-x-4">
-            <button
-              onClick={handleAddToCart}
-              className="px-6 py-2 text-white bg-red-500 rounded hover:bg-red-600"
-            >
-              Add to Cart
-            </button>
-            <button className="px-6 py-2 text-white bg-orange-500 rounded hover:bg-orange-600">
-              Buy Now
-            </button>
-          </div>
+          <div>Price : ${thisService.minPrice} - ${thisService.maxPrice}</div>
 
           {/* Offers Section */}
-          <div className="space-y-4 text-gray-700">
+          <div className="mt-4 space-y-4 text-gray-700">
             <h3 className="font-bold">Product Description</h3>
             <p>
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Cum
-              consectetur rerum ad modi magni aliquam odit, amet, provident
-              maiores maxime beatae ducimus alias quas quae sunt, nobis
-              consequuntur et quia minima nesciunt esse assumenda cupiditate
-              quos.
+              {thisService.description}
             </p>
-            <button className='px-20 py-2 font-semibold border-2 border-black hover:bg-black hover:text-white'>Contact Us</button>
+           {!showBookingForm && (<button onClick={handleBookClick} className='px-20 py-2 font-semibold uppercase border-2 border-black hover:bg-black hover:text-white'>Book</button>)} 
+            
+            {/* Booking Form */}
+            {showBookingForm && (
+              <div className="mt-4 space-y-4">
+                <textarea
+                  value={bookingMessage}
+                  onChange={(e) => setBookingMessage(e.target.value)}
+                  placeholder="Please describe your requirements..."
+                  className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-black"
+                  rows={4}
+                />
+                <button
+                  onClick={handleSubmitBooking}
+                  className="px-8 py-2 text-white bg-black rounded-md hover:bg-gray-800"
+                >
+                  Submit Booking
+                </button>
+                <button
+                  onClick={()=>setShowBookingForm(false)}
+                  className="px-8 py-2 ml-4 text-black border-2 border-black rounded-md hover:bg-gray-200"
+                >
+                 Cancel
+                </button>
+              </div>
+            )}
           </div>
           <ReviewSection />
         </div>
+          <ToastContainer
+      position='top-center'
+      autoClose={2000}
+      hideProgressBar={false}
+      theme='dark'
+      />
       </div>
     </>
   );

@@ -15,8 +15,14 @@ const taskSchema = new Schema(
     },
     status: {
       type: String,
-      enum: ["query", "meeting", "agreed", "process", "completed"],
-      default: "query",
+      enum: [
+        "Query Raised",
+        "Meeting Booked",
+        "Agreed to T&C",
+        "Task In Progress",
+        "Completed",
+      ],
+      default: "Query Raised",
     },
   },
   { timestamps: true }

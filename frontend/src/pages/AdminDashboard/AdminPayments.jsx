@@ -1,16 +1,36 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Sidebar from './Sidebar'
 import { Search, Edit, Save, X, Trash2 } from 'lucide-react'
+import useStore from '../../store/store'
+import DateFormatter from '../../components/DateFormatter'
 
 const Payments = () => {
-  const [payments, setPayments] = useState([]);
+  const {payments, getPaymentsByTask, addPayments, deletePayment, updatePayment} = useStore();
+  const [search, setSearch] = useState('');
+  const [loading,setLoading] = useState(true);
   const [toggleForm, setToggleForm] = useState(false);
   const [editingId, setEditingId] = useState(null);
+  const [task, setTask] = useState({});
   const [formData, setFormData] = useState({
     milestoneName: '',
     description: '',
     price: ''
   });
+
+  const handleFetchPayment = async() =>{
+    setLoading(true);
+    try {
+     const taskData = await getPaymentsByTask(search);
+     console.log(taskData)
+    setTask(taskData);
+     console.log(task);
+    } catch (error) {
+      console.log(error);
+    }finally{
+      setLoading(false);
+    }
+  }
+  useEffect(()=>{console.log(payments)})
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -20,19 +40,18 @@ const Payments = () => {
     }));
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (formData.milestoneName && formData.description && formData.price) {
       if (editingId !== null) {
         // Update existing payment
-        setPayments(prevPayments =>
-          prevPayments.map(payment =>
-            payment.id === editingId ? { ...payment, ...formData } : payment
-          )
-        );
+      await updatePayment(editingId,formData.price,formData.milestoneName,formData.description);
+      await handleFetchPayment();
         setEditingId(null);
       } else {
         // Add new payment
-        setPayments(prevPayments => [...prevPayments, { ...formData, id: Date.now() }]);
+        // console.log(payments[0].task, formData.price,formData.milestoneName,formData.description)
+       await addPayments(search, formData.price,formData.milestoneName,formData.description);
+       handleFetchPayment();
       }
       setFormData({ milestoneName: '', description: '', price: '' });
       setToggleForm(false);
@@ -42,8 +61,12 @@ const Payments = () => {
   };
 
   const handleEdit = (payment) => {
-    setFormData(payment);
-    setEditingId(payment.id);
+    setFormData({
+      milestoneName:payment.milestone,
+      description:payment.description,
+      price:payment.amount
+    });
+    setEditingId(payment._id);
     setToggleForm(true);
   };
 
@@ -53,9 +76,10 @@ const Payments = () => {
     setToggleForm(false);
   };
 
-  const handleDelete = (id) => {
+  const handleDelete = async (id) => {
     if (window.confirm('Are you sure you want to delete this payment?')) {
-      setPayments(prevPayments => prevPayments.filter(payment => payment.id !== id));
+     await deletePayment(id);
+      handleFetchPayment()
       if (editingId === id) {
         handleCancelEdit();
       }
@@ -69,28 +93,31 @@ const Payments = () => {
         <h1 className='text-4xl'>Payments</h1>
         {/* Create payments */}
         <div className='border-[1px] flex justify-between max-w-[400px] bg-white shadow-md my-4 border-gray-300 px-4 py-2 rounded-lg text-xl'>
-          <input className='bg-transparent focus:outline-none' type="text" placeholder='Enter task Id' />
-          <button className=''><Search /></button>
+          <input value={search} onChange={e=>setSearch(e.target.value)} className='bg-transparent focus:outline-none' type="text" placeholder='Enter task Id' />
+          <button onClick={handleFetchPayment} className=''><Search /></button>
         </div>
         {/* Container */}
         <div>
-          {/* Task Card */}
-          <div className='rounded-lg flex flex-col justify-between max-w-[400px] shadow-md bg-gradient-to-r from-blue-500 to-blue-700'>
-            <h1 className='px-4 my-4 text-2xl font-semibold text-center text-white'>Web Development</h1>
+          {loading ? (<div></div>): (
+<div className='rounded-lg flex flex-col justify-between max-w-[400px] shadow-md bg-gradient-to-r from-blue-500 to-blue-700'>
+            <h1 className='px-4 my-4 text-2xl font-semibold text-center text-white'>{task.serviceType.name}</h1>
             {/* Details subcard */}
             <div className='w-full p-4 bg-white rounded-lg'>
-              <h3 className='my-4 text-xl font-semibold'>Id: <span className='text-gray-600'>2sdf32</span></h3>
+              <h3 className='my-4 text-xl font-semibold'>Id: <span className='text-gray-600'>{search}</span></h3>
               {payments.length === 0 ? (
                 <h3>No Payments Found</h3>
               ) : (
                 <div>
                   <h3 className='my-4 text-xl font-semibold'>Payments:</h3>
                   {payments.map(payment => (
-                    <div key={payment.id} className='p-2 mb-4 border border-gray-300 rounded'>
-                      <p><strong>Milestone:</strong> {payment.milestoneName}</p>
-                      <p><strong>Description:</strong> {payment.description}</p>
-                      <p><strong>Price:</strong> ${payment.price}</p>
-                      <div className='flex gap-2 mt-2'>
+                    <div key={payment._id} className='p-2 mb-4 border border-gray-300 rounded'>
+                      <p className='flex justify-between capitalize'><strong>Milestone:</strong> {payment.milestone}</p>
+                      <p className='flex justify-between capitalize'><strong>Description:</strong> {payment.description ?? 'Null'}</p>
+                      <p className='flex justify-between capitalize'><strong>Price:</strong> ${payment.amount}</p>
+                      <p className='flex justify-between capitalize'><strong>Status:</strong> {payment.status}</p>
+                      <p className='flex justify-between capitalize'><strong>Last Updated:</strong> <DateFormatter date={payment.updatedAt} /></p>
+                    {payment.status == 'paid' ? '' : (
+ <div className='flex gap-2 mt-2'>
                         <button 
                           onClick={() => handleEdit(payment)}
                           className='flex items-center px-2 py-1 text-white bg-blue-500 rounded-md hover:bg-blue-600'
@@ -98,12 +125,14 @@ const Payments = () => {
                           <Edit size={16} className="mr-1" /> Edit
                         </button>
                         <button 
-                          onClick={() => handleDelete(payment.id)}
+                          onClick={() => handleDelete(payment._id)}
                           className='flex items-center px-2 py-1 text-white bg-red-500 rounded-md hover:bg-red-600'
                         >
                           <Trash2 size={16} className="mr-1" /> Delete
                         </button>
                       </div>
+                    )}
+                     
                     </div>
                   ))}
                 </div>
@@ -160,6 +189,7 @@ const Payments = () => {
               )}
             </div>
           </div>
+          )}
         </div>
       </main>
     </div>

@@ -5,7 +5,10 @@ import {
   updateUserProfile,
   getUserById,
   updatePwd,
+  logoutUser,
+  refreshAccessToken,
 } from "../controllers/userController.js";
+import { verifyJWT } from "../middlewares/auth.middleware.js";
 
 const userRouter = express.Router();
 
@@ -19,5 +22,9 @@ userRouter.post("/update", updateUserProfile);
 userRouter.post("/getUser", getUserById);
 // Update userpassword
 userRouter.post("/updatePwd", updatePwd);
+
+// Secured Routes
+userRouter.post("/logout", verifyJWT, logoutUser);
+userRouter.post("/refreshToken", refreshAccessToken);
 
 export { userRouter };
