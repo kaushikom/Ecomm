@@ -32,9 +32,18 @@ const userSchema = new Schema(
     type: {
       type: String,
     },
-    refreshToken: {
-      type: String,
+    lastLogin: {
+      type: Date,
+      default: Date.now,
     },
+    isVerified: {
+      type: Boolean,
+      default: false,
+    },
+    resetPasswordToken: String,
+    resetPasswordExpiresAt: Date,
+    verificationToken: String,
+    verificationTokenExpiresAt: Date,
   },
   { timestamps: true }
 );
@@ -87,12 +96,17 @@ userSchema.statics.signup = async function (
   }
   const salt = await bcrypt.genSalt(10);
   const hash = await bcrypt.hash(password, salt);
+  const verificationToken = Math.floor(
+    100000 + Math.random() * 900000
+  ).toString();
 
   const user = await this.create({
     firstName,
     lastName,
     email,
     password: hash,
+    verificationToken,
+    verificationTokenExpiresAt: Date.now() + 24 * 60 * 60 * 1000, //24 hrs
   });
   return user;
 };

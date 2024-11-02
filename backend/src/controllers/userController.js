@@ -1,16 +1,22 @@
 import { User } from "../models/user.model.js";
 import jwt from "jsonwebtoken";
+import crypto from "crypto";
+import {
+  sendVerificationEmail,
+  sendWelcomeEmail,
+  sendPasswordResetEmail,
+} from "../mailtrap/emails.js";
 
-const generateTokens = async (id) => {
+const generateTokenAndSetCookie = async (res, id) => {
   try {
-    const user = await User.findById(id);
-    const accessToken = user.generateAccessToken();
-    const refreshToken = user.generateRefreshToken();
-
-    user.refreshToken = refreshToken;
-    await user.save({ validateBeforeSave: false });
-
-    return { accessToken, refreshToken };
+    const token = jwt.sign({ id }, process.env.SECRET, { expiresIn: "7d" });
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
+      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+    });
+    return token;
   } catch (error) {
     throw new Error("Error generating tokens");
   }
@@ -20,47 +26,77 @@ const loginUser = async (req, res) => {
   const { email, password } = req.body;
   try {
     const user = await User.login(email, password);
-    // Creating token
-    const { accessToken, refreshToken } = await generateTokens(user._id);
-    const loggedInUser = await User.findById(user._id).select(
-      "-password -refreshToken"
-    );
 
-    // Cookie options
-    const options = {
-      httpOnly: true,
-      secure: true,
-    };
-
-    res
-      .status(200)
-      .cookie("accessToken", accessToken, options)
-      .cookie("refreshToken", refreshToken, options)
-      .json({ user, accessToken });
+    generateTokenAndSetCookie(res, user._id);
+    user.lastLogin = new Date();
+    await user.save();
+    res.status(200).json({
+      success: true,
+      message: "Logged in successfully",
+      user: {
+        ...user._doc,
+        password: undefined,
+      },
+    });
   } catch (error) {
+    console.log("Error logging in: ", error);
     res.status(400).json({ error: error.message });
   }
 };
+// Verify User
+const verifyEmail = async (req, res) => {
+  const { code } = req.body;
+  try {
+    const user = await User.findOne({
+      verificationToken: code,
+      verificationTokenExpiresAt: { $gt: Date.now() },
+    });
+    if (!user) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid or expired verification code",
+      });
+    }
+    user.isVerified = true;
+    user.verificationToken = undefined;
+    user.verificationTokenExpiresAt = undefined;
+    await user.save();
+    await sendWelcomeEmail(user.email, user.firstName);
+    res.status(200).json({
+      success: true,
+      message: "Email verified successfully",
+      user: { ...user._doc, password: undefined },
+    });
+  } catch (error) {}
+};
 // Logout User
-const logoutUser = async (req, res) => {
-  await User.findByIdAndUpdate(
-    req.user._id,
-    {
-      $set: {
-        refreshToken: undefined,
-      },
-    },
-    { new: true }
-  );
-  const options = {
-    httpOnly: true,
-    secure: true,
-  };
-  return res
-    .status(200)
-    .clearCookie("accessToken", options)
-    .clearCookie("refreshToken", options)
-    .json({ success: true, message: "User logged out successfully" });
+const logout = async (req, res) => {
+  res.clearCookie("token");
+  res.status(200).json({ success: true, message: "Logged out successfully" });
+};
+// Forgot password
+const forgotPassword = async (req, res) => {
+  const { email } = req.body;
+  try {
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res
+        .status(400)
+        .json({ success: false, message: "User not found" });
+    }
+    const resetToken = crypto.randomBytes(20).toString();
+    const resetTokenExpiresAt = Date.now() + 1 * 60 * 60 * 1000; //1 hr
+
+    user.resetPasswordToken = resetToken;
+    user.resetPasswordExpiresAt = resetTokenExpiresAt;
+    await user.save();
+    // Send email
+    await sendPasswordResetEmail(
+      user.email,
+      `${process.env.CLIENT_URL}/reset-password/${resetToken}`
+    );
+    return res.status(200).json({ success: true, message: "Email link sent" });
+  } catch (error) {}
 };
 // Signup User
 const signupUser = async (req, res) => {
@@ -68,9 +104,16 @@ const signupUser = async (req, res) => {
 
   try {
     const user = await User.signup(firstName, lastName, email, password);
-    // Creating token
-    const token = createToken(user._id);
-    res.status(200).json({ email, token });
+    generateTokenAndSetCookie(res, user._id);
+    await sendVerificationEmail(user.email, user.verificationToken);
+    res.status(201).json({
+      success: true,
+      message: "User created successfully",
+      user: {
+        ...user._doc,
+        password: undefined,
+      },
+    });
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
@@ -157,6 +200,8 @@ export {
   updateUserProfile,
   getUserById,
   updatePwd,
-  logoutUser,
+  logout,
   refreshAccessToken,
+  verifyEmail,
+  forgotPassword,
 };
