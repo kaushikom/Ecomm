@@ -25,6 +25,9 @@ const userSchema = new Schema(
     location: {
       type: String,
     },
+    phone: {
+      type: String,
+    },
     password: {
       type: String,
       required: [true, "Password is required"],
@@ -131,7 +134,8 @@ userSchema.statics.updateProfile = async function (
   userId,
   lastName,
   company,
-  location
+  location,
+  phone
 ) {
   const user = await this.findById(userId);
   if (!user) {
@@ -142,6 +146,7 @@ userSchema.statics.updateProfile = async function (
   if (lastName) user.lastName = lastName;
   if (company) user.company = company;
   if (location) user.location = location;
+  if (phone) user.phone = phone;
 
   // Save the updated user
   await user.save();

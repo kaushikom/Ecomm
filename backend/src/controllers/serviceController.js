@@ -5,10 +5,17 @@ import { Category } from "../models/category.model.js";
 const addNewService = async (req, res) => {
   console.log(req.body);
   try {
-    const { name, categoryId, minPrice, maxPrice, imageUrl, description } =
-      req.body;
+    const {
+      name,
+      categoryId,
+      minPrice,
+      maxPrice,
+      imageUrl,
+      description,
+      tags,
+    } = req.body;
 
-    // Check if any field is empty
+    // Check if required fields are provided
     if (!name || !categoryId || !minPrice || !maxPrice || !imageUrl) {
       return res.status(400).json({
         success: false,
@@ -47,7 +54,7 @@ const addNewService = async (req, res) => {
         message: "Service with this name already exists in the category",
       });
     }
-    // Create new service
+    // Create new service with tags
     const newService = await Service.create({
       name,
       category: categoryId,
@@ -55,6 +62,7 @@ const addNewService = async (req, res) => {
       maxPrice,
       imageUrl,
       description,
+      tags, // Store tags in the service document
     });
     // Populate category details in response
     const populatedService = await Service.findById(newService._id).populate(
@@ -124,7 +132,8 @@ const deleteService = async (req, res) => {
 
 // Update Service
 const updateService = async (req, res) => {
-  const { id, name, minPrice, maxPrice, imageUrl, description } = req.body;
+  const { id, name, minPrice, maxPrice, imageUrl, description, tags } =
+    req.body;
   if (!name || !minPrice || !maxPrice || !imageUrl || !description) {
     return res
       .status(400)
@@ -139,6 +148,7 @@ const updateService = async (req, res) => {
         maxPrice,
         imageUrl,
         description,
+        tags, // Update tags in the service document
       },
       { new: true }
     );

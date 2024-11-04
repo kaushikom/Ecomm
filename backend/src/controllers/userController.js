@@ -132,14 +132,15 @@ const signupUser = async (req, res) => {
 };
 // Update user profile
 const updateUserProfile = async (req, res) => {
-  const { userId, lastName, company, location } = req.body;
-
+  const { userId, lastName, company, location, phone } = req.body;
+  console.log("Phone: ", phone);
   try {
     const updatedUser = await User.updateProfile(
       userId,
       lastName,
       company,
-      location
+      location,
+      phone
     );
     res
       .status(200)

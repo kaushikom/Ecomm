@@ -55,7 +55,8 @@ const useStore = create((set, get) => ({
       throw new Error(errorMessage);
     }
   },
-  update: async (userId, lastName, company, location) => {
+  update: async (userId, lastName, company, location, phone) => {
+    console.log(phone);
     try {
       const response = await axios.post(
         "http://localhost:4000/api/user/update",
@@ -64,6 +65,7 @@ const useStore = create((set, get) => ({
           lastName,
           company,
           location,
+          phone,
         }
       );
       set({ user: response.data.user, error: null, isLoggedIn: true });
@@ -428,12 +430,13 @@ const useStore = create((set, get) => ({
     minPrice,
     maxPrice,
     imageUrl,
-    description
+    description,
+    tags
   ) => {
     try {
       const response = await axios.post(
         "http://localhost:4000/api/service/addNew",
-        { name, categoryId, minPrice, maxPrice, imageUrl, description }
+        { name, categoryId, minPrice, maxPrice, imageUrl, description, tags }
       );
       return response.success;
     } catch (error) {
@@ -446,12 +449,13 @@ const useStore = create((set, get) => ({
     minPrice,
     maxPrice,
     imageUrl,
-    description
+    description,
+    tags
   ) => {
     try {
       const response = await axios.put(
         `http://localhost:4000/api/service/update`,
-        { id, name, minPrice, maxPrice, imageUrl, description }
+        { id, name, minPrice, maxPrice, imageUrl, description, tags }
       );
       return response.success;
     } catch (error) {

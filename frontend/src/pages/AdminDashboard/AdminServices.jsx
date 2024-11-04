@@ -4,165 +4,165 @@ import useStore from '../../store/store';
 import { toast, ToastContainer } from 'react-toastify';
 import { Pencil, Trash, Plus, Check, X } from 'lucide-react';
 
-const Modal = ({ showModal, handleClose, editData }) => {
-  const { addService, updateService, cat,getServices } = useStore();
-  const [loading, setLoading] = useState(false)
-  const [formData, setFormData] = useState({
-    name: '',
-    imageUrl: '',
-    minPrice: '',
-    maxPrice: '',
-    categoryId: '',
-    description: ''
-  });
-    const fetchServices = async () => {
-    try {
-      await getServices();
-    } catch (err) {
-      toast.error('Error fetching services');
-    } 
-  };
-  // Reset form when modal closes or switches between edit/create
-  useEffect(() => {
-    if (editData) {
-      setFormData({
-        name: editData.name || '',
-        imageUrl: editData.imageUrl || '',
-        minPrice: editData.minPrice || '',
-        maxPrice: editData.maxPrice || '',
-        categoryId: editData.category || '',
-        description: editData.description || ''
-      });
-    } else {
-      setFormData({
-        name: '',
-        imageUrl: '',
-        minPrice: '',
-        maxPrice: '',
-        categoryId: '',
-        description: ''
-      });
-    }
-  }, [editData, showModal]);
+// const Modal = ({ showModal, handleClose, editData }) => {
+//   const { addService, updateService, cat,getServices } = useStore();
+//   const [loading, setLoading] = useState(false)
+//   const [formData, setFormData] = useState({
+//     name: '',
+//     imageUrl: '',
+//     minPrice: '',
+//     maxPrice: '',
+//     categoryId: '',
+//     description: ''
+//   });
+//     const fetchServices = async () => {
+//     try {
+//       await getServices();
+//     } catch (err) {
+//       toast.error('Error fetching services');
+//     } 
+//   };
+//   // Reset form when modal closes or switches between edit/create
+//   useEffect(() => {
+//     if (editData) {
+//       setFormData({
+//         name: editData.name || '',
+//         imageUrl: editData.imageUrl || '',
+//         minPrice: editData.minPrice || '',
+//         maxPrice: editData.maxPrice || '',
+//         categoryId: editData.category || '',
+//         description: editData.description || ''
+//       });
+//     } else {
+//       setFormData({
+//         name: '',
+//         imageUrl: '',
+//         minPrice: '',
+//         maxPrice: '',
+//         categoryId: '',
+//         description: ''
+//       });
+//     }
+//   }, [editData, showModal]);
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
-  };
+//   const handleChange = (e) => {
+//     const { name, value } = e.target;
+//     setFormData(prev => ({
+//       ...prev,
+//       [name]: value
+//     }));
+//   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-    try {
-      if (editData) {
-        await updateService(editData._id, formData.name,formData.minPrice, formData.maxPrice,formData.imageUrl,formData.description);
-        toast.success('Service updated successfully');
-      } else {
-        console.log(formData);
-        await addService(
-          formData.name,
-          formData.categoryId,
-          Number(formData.minPrice),
-          Number(formData.maxPrice),
-          formData.imageUrl,
-          formData.description
-        );
-        toast.success('Service added successfully');
-      }
-      handleClose();
-      fetchServices();
-    } catch (error) {
-      toast.error(error.message || 'Something went wrong');
-    } finally {
-      setLoading(false);
-    }
-  };
+//   const handleSubmit = async (e) => {
+//     e.preventDefault();
+//     setLoading(true);
+//     try {
+//       if (editData) {
+//         await updateService(editData._id, formData.name,formData.minPrice, formData.maxPrice,formData.imageUrl,formData.description);
+//         toast.success('Service updated successfully');
+//       } else {
+//         console.log(formData);
+//         await addService(
+//           formData.name,
+//           formData.categoryId,
+//           Number(formData.minPrice),
+//           Number(formData.maxPrice),
+//           formData.imageUrl,
+//           formData.description
+//         );
+//         toast.success('Service added successfully');
+//       }
+//       handleClose();
+//       fetchServices();
+//     } catch (error) {
+//       toast.error(error.message || 'Something went wrong');
+//     } finally {
+//       setLoading(false);
+//     }
+//   };
 
-  return (
-    <form onSubmit={handleSubmit} className={`fixed z-10 shadow-2xl top-20 px-4 bg-white py-2 left-1/2 -translate-x-1/2 border-2 border-black min-w-[300px] ${showModal ? 'block' : 'hidden'}`}>
-      <h1 className='text-2xl font-semibold'>{editData ? 'Edit Service' : 'Service Details'}</h1>
-      <input 
-        type="text" 
-        name="name"
-        value={formData.name} 
-        onChange={handleChange} 
-        className='w-full p-2 my-2 bg-gray-200 rounded-md' 
-        placeholder='Name' 
-        required
-      />
-      <input 
-        type="text" 
-        name="imageUrl"
-        value={formData.imageUrl} 
-        onChange={handleChange} 
-        className='w-full p-2 my-2 bg-gray-200 rounded-md' 
-        placeholder='Image URL'
-        required 
-      />
-      <div className='flex justify-between gap-4'>
-        <div>
-          From: <input 
-            className='p-2 my-2 bg-gray-200 rounded-md max-w-[10ch]' 
-            type="number"
-            name="minPrice"
-            value={formData.minPrice}
-            onChange={handleChange}
-            required
-          />
-        </div>
-        <div>
-          To: <input 
-            className='p-2 my-2 bg-gray-200 rounded-md max-w-[10ch]' 
-            type="number"
-            name="maxPrice"
-            value={formData.maxPrice}
-            onChange={handleChange}
-            required
-          />
-        </div>
-      </div>
-      <div className='flex my-2 bg-gray-200 rounded-md'>
-        <select  
-          className='p-2 bg-gray-200 rounded-md grow'
-          name="categoryId"
-          value={formData.categoryId}
-          onChange={handleChange}
-          required
-        >
-          <option value="">Select Category</option>
-          {cat.map(c=><option value={c._id} key={c._id}>{c.name}</option>)}
-        </select>
-      </div>
-      <textarea 
-        name="description"
-        value={formData.description} 
-        onChange={handleChange} 
-        className='w-full p-2 my-2 bg-gray-200 rounded-md' 
-        placeholder='Description'
-        required
-      />
-      <div className='flex justify-between'>
-        <button 
-          type="submit"
-          disabled={loading}
-          className='flex items-center gap-2 p-2 text-white bg-blue-700 hover:bg-blue-800 disabled:bg-blue-300'
-        >
-          <Check/>{loading ? 'Processing...' : (editData ? 'Update' : 'Submit')}
-        </button>
-        <button 
-          type='button' 
-          className='flex items-center gap-2 p-2 text-white bg-black hover:bg-gray-800' 
-          onClick={handleClose}
-        >
-          <X/>Close
-        </button>
-      </div>
-    </form>
-  );
-};
+//   return (
+//     <form onSubmit={handleSubmit} className={`fixed z-10 shadow-2xl top-20 px-4 bg-white py-2 left-1/2 -translate-x-1/2 border-2 border-black min-w-[300px] ${showModal ? 'block' : 'hidden'}`}>
+//       <h1 className='text-2xl font-semibold'>{editData ? 'Edit Service' : 'Service Details'}</h1>
+//       <input 
+//         type="text" 
+//         name="name"
+//         value={formData.name} 
+//         onChange={handleChange} 
+//         className='w-full p-2 my-2 bg-gray-200 rounded-md' 
+//         placeholder='Name' 
+//         required
+//       />
+//       <input 
+//         type="text" 
+//         name="imageUrl"
+//         value={formData.imageUrl} 
+//         onChange={handleChange} 
+//         className='w-full p-2 my-2 bg-gray-200 rounded-md' 
+//         placeholder='Image URL'
+//         required 
+//       />
+//       <div className='flex justify-between gap-4'>
+//         <div>
+//           From: <input 
+//             className='p-2 my-2 bg-gray-200 rounded-md max-w-[10ch]' 
+//             type="number"
+//             name="minPrice"
+//             value={formData.minPrice}
+//             onChange={handleChange}
+//             required
+//           />
+//         </div>
+//         <div>
+//           To: <input 
+//             className='p-2 my-2 bg-gray-200 rounded-md max-w-[10ch]' 
+//             type="number"
+//             name="maxPrice"
+//             value={formData.maxPrice}
+//             onChange={handleChange}
+//             required
+//           />
+//         </div>
+//       </div>
+//       <div className='flex my-2 bg-gray-200 rounded-md'>
+//         <select  
+//           className='p-2 bg-gray-200 rounded-md grow'
+//           name="categoryId"
+//           value={formData.categoryId}
+//           onChange={handleChange}
+//           required
+//         >
+//           <option value="">Select Category</option>
+//           {cat.map(c=><option value={c._id} key={c._id}>{c.name}</option>)}
+//         </select>
+//       </div>
+//       <textarea 
+//         name="description"
+//         value={formData.description} 
+//         onChange={handleChange} 
+//         className='w-full p-2 my-2 bg-gray-200 rounded-md' 
+//         placeholder='Description'
+//         required
+//       />
+//       <div className='flex justify-between'>
+//         <button 
+//           type="submit"
+//           disabled={loading}
+//           className='flex items-center gap-2 p-2 text-white bg-blue-700 hover:bg-blue-800 disabled:bg-blue-300'
+//         >
+//           <Check/>{loading ? 'Processing...' : (editData ? 'Update' : 'Submit')}
+//         </button>
+//         <button 
+//           type='button' 
+//           className='flex items-center gap-2 p-2 text-white bg-black hover:bg-gray-800' 
+//           onClick={handleClose}
+//         >
+//           <X/>Close
+//         </button>
+//       </div>
+//     </form>
+//   );
+// };
 const CategoryToggles = () => {
   const {getAllCat, cat, getServices} = useStore();
   const [loading,setLoading] = useState(true);
@@ -314,3 +314,188 @@ const AdminServices = () => {
 };
 
 export default AdminServices;
+
+
+
+const Modal = ({ showModal, handleClose, editData }) => {
+  const { addService, updateService, cat, getServices } = useStore();
+  const [loading, setLoading] = useState(false);
+  const [formData, setFormData] = useState({
+    name: '',
+    imageUrl: '',
+    minPrice: '',
+    maxPrice: '',
+    categoryId: '',
+    description: '',
+    tags: '',
+  });
+
+  const fetchServices = async () => {
+    try {
+      await getServices();
+    } catch (err) {
+      toast.error('Error fetching services');
+    }
+  };
+
+  // Reset form when modal closes or switches between edit/create
+  useEffect(() => {
+    if (editData) {
+      setFormData({
+        name: editData.name || '',
+        imageUrl: editData.imageUrl || '',
+        minPrice: editData.minPrice || '',
+        maxPrice: editData.maxPrice || '',
+        categoryId: editData.category || '',
+        description: editData.description || '',
+        tags: editData.tags ? editData.tags.join(', ') : '',
+      });
+    } else {
+      setFormData({
+        name: '',
+        imageUrl: '',
+        minPrice: '',
+        maxPrice: '',
+        categoryId: '',
+        description: '',
+        tags: '',
+      });
+    }
+  }, [editData, showModal]);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    const tagsArray = formData.tags.split(',').map((tag) => tag.trim());
+    try {
+      if (editData) {
+        await updateService(
+          editData._id,
+          formData.name,
+          formData.minPrice,
+          formData.maxPrice,
+          formData.imageUrl,
+          formData.description,
+          tagsArray // Pass tags array for editing
+        );
+        toast.success('Service updated successfully');
+      } else {
+        await addService(
+          formData.name,
+          formData.categoryId,
+          Number(formData.minPrice),
+          Number(formData.maxPrice),
+          formData.imageUrl,
+          formData.description,
+          tagsArray // Pass tags array for adding a new service
+        );
+        toast.success('Service added successfully');
+      }
+      handleClose();
+      fetchServices();
+    } catch (error) {
+      toast.error(error.message || 'Something went wrong');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <form onSubmit={handleSubmit} className={`fixed z-10 shadow-2xl top-20 px-4 bg-white py-2 left-1/2 -translate-x-1/2 border-2 border-black min-w-[300px] ${showModal ? 'block' : 'hidden'}`}>
+      <h1 className='text-2xl font-semibold'>{editData ? 'Edit Service' : 'Service Details'}</h1>
+      <input
+        type="text"
+        name="name"
+        value={formData.name}
+        onChange={handleChange}
+        className='w-full p-2 my-2 bg-gray-200 rounded-md'
+        placeholder='Name'
+        required
+      />
+      <input
+        type="text"
+        name="imageUrl"
+        value={formData.imageUrl}
+        onChange={handleChange}
+        className='w-full p-2 my-2 bg-gray-200 rounded-md'
+        placeholder='Image URL'
+        required
+      />
+      <div className='flex justify-between gap-4'>
+        <div>
+          From: <input
+            className='p-2 my-2 bg-gray-200 rounded-md max-w-[10ch]'
+            type="number"
+            name="minPrice"
+            value={formData.minPrice}
+            onChange={handleChange}
+            required
+          />
+        </div>
+        <div>
+          To: <input
+            className='p-2 my-2 bg-gray-200 rounded-md max-w-[10ch]'
+            type="number"
+            name="maxPrice"
+            value={formData.maxPrice}
+            onChange={handleChange}
+            required
+          />
+        </div>
+      </div>
+      <div className='flex my-2 bg-gray-200 rounded-md'>
+        <select
+          className='p-2 bg-gray-200 rounded-md grow'
+          name="categoryId"
+          value={formData.categoryId}
+          onChange={handleChange}
+          required
+        >
+          <option value="">Select Category</option>
+          {cat.map(c => <option value={c._id} key={c._id}>{c.name}</option>)}
+        </select>
+      </div>
+      <textarea
+        name="description"
+        value={formData.description}
+        onChange={handleChange}
+        className='w-full p-2 my-2 bg-gray-200 rounded-md'
+        placeholder='Description'
+        required
+      />
+      <input
+        type="text"
+        name="tags"
+        value={formData.tags}
+        onChange={handleChange}
+        className='w-full p-2 my-2 bg-gray-200 rounded-md'
+        placeholder='Tags (comma-separated)'
+      />
+      <div className='flex justify-between'>
+        <button
+          type="submit"
+          disabled={loading}
+          className='flex items-center gap-2 p-2 text-white bg-blue-700 hover:bg-blue-800 disabled:bg-blue-300'
+        >
+          <Check />{loading ? 'Processing...' : (editData ? 'Update' : 'Submit')}
+        </button>
+        <button
+          type='button'
+          className='flex items-center gap-2 p-2 text-white bg-black hover:bg-gray-800'
+          onClick={handleClose}
+        >
+          <X />Close
+        </button>
+      </div>
+    </form>
+  );
+};
+

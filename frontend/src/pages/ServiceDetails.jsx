@@ -104,7 +104,10 @@ const ServiceDetails = () => {
             className="object-cover w-full rounded-lg shadow-md h-96"
           />
           <div className="flex gap-4 mt-8">
-            <span className="px-3 py-2 text-center bg-gray-200 border-2 border-gray-400 rounded-full ">
+            {thisService.tags?.map(tag=>(<span key={tag} className="px-3 py-2 text-center bg-gray-200 border-2 border-gray-400 rounded-full ">
+              {tag}
+            </span>))}
+            {/* <span className="px-3 py-2 text-center bg-gray-200 border-2 border-gray-400 rounded-full ">
               Web Development
             </span>
             <span className="px-3 py-2 text-center bg-gray-200 border-2 border-gray-400 rounded-full">
@@ -115,7 +118,7 @@ const ServiceDetails = () => {
             </span>
             <span className="px-3 py-2 text-center bg-gray-200 border-2 border-gray-400 rounded-full">
               Web3 Development
-            </span>
+            </span> */}
           </div>
           <div className="mt-8">
             <ServiceFeatures />

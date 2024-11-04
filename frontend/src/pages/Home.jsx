@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import { Link } from 'react-router-dom';
 import ImageSlider from '../components/ImageSlider';
 import TopCollectionSlider from '../components/TopCollectionsSlider';
@@ -53,7 +53,51 @@ const BenefitCard = ({ icon, title, description }) => {
   );
 };
 
+// const FreelanceSearch = () => {
+//   return (
+//     <div className="p-8 text-center text-white bg-green-900 rounded-lg">
+//       <h1 className="mt-20 mb-12 text-4xl font-bold">
+//         Find the right <span className="font-serif text-green-300">freelance</span><br />
+//         service, right away
+//       </h1>
+      
+//       <div className="flex mx-auto mb-8 sm:w-1/2">
+//         <input
+//           type="text"
+//           placeholder="Search for any service..."
+//           className="w-full p-3 text-gray-800 rounded-l-md"
+//         />
+//         <button className="p-3 bg-green-700 rounded-r-md">
+//           <Search size={24} />
+//         </button>
+//       </div>
+      
+//       <TrustedBy />
+//     </div>
+//   );
+// };
 const FreelanceSearch = () => {
+  const [searchTerm, setSearchTerm] = useState('');
+  const [results, setResults] = useState({ services: [], categories: [] });
+
+  // Function to handle search
+  const handleSearch = async () => {
+    if (!searchTerm.trim()) return;
+
+    try {
+      const response = await fetch(`http://localhost:4000/api/search?q=${encodeURIComponent(searchTerm)}`);
+      const data = await response.json();
+      setResults(data); // Set the services and categories in the state
+    } catch (error) {
+      console.error('Error fetching search results:', error);
+    }
+  };
+
+  // Event handler for search button click or pressing Enter key
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter') handleSearch();
+  };
+
   return (
     <div className="p-8 text-center text-white bg-green-900 rounded-lg">
       <h1 className="mt-20 mb-12 text-4xl font-bold">
@@ -66,17 +110,43 @@ const FreelanceSearch = () => {
           type="text"
           placeholder="Search for any service..."
           className="w-full p-3 text-gray-800 rounded-l-md"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          onKeyDown={handleKeyDown}
         />
-        <button className="p-3 bg-green-700 rounded-r-md">
+        <button onClick={handleSearch} className="p-3 bg-green-700 rounded-r-md">
           <Search size={24} />
         </button>
       </div>
-      
+
+      {/* Display search results */}
+      <div className="mx-auto my-4 max-h-[30vh] overflow-y-scroll text-black bg-white rounded-lg sm:w-1/2">
+        {results.services.length > 0 && (
+          <div className='p-4'>
+            <h3 className="mb-2 text-lg font-bold text-start">Services</h3>
+            <ul className='flex flex-col items-start gap-2'>
+              {results.services.map((service) => (
+                <Link className='hover:text-blue-600' to={`/services/${service._id}`} key={service._id}>{service.name}</Link>
+              ))}
+            </ul>
+          </div>
+        )}
+        {results.categories.length > 0 && (
+          <div className='p-4'>
+            <h3 className="mb-2 text-lg font-bold  text-start">Categories</h3>
+            <ul className='flex flex-col items-start gap-2'>
+              {results.categories.map((category) => (
+                <Link className='hover:text-blue-600' to={`/category/${category._id}`} key={category._id}>{category.name}</Link>
+              ))}
+            </ul>
+          </div>
+        )}
+      </div>
+
       <TrustedBy />
     </div>
   );
 };
-
 const TrustedBy = () => {
   const companies = ['Meta', 'Google', 'NETFLIX', 'P&G', 'PayPal', 'Payoneer'];
   return (

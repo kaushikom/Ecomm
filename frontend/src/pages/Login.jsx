@@ -31,7 +31,7 @@ const navigate = useNavigate();
     localStorage.removeItem('redirectAfterLogin');
     navigate(redirectPath);
   } else{
-    navigate('/services')
+    navigate('/')
   }
         }
     })

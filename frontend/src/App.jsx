@@ -91,7 +91,7 @@ try {
             <Route path="/" element={<Home />} />
             <Route path="/category/:categoryId" element={<Category />} />
             <Route path="/services/:serviceId" element={<ServiceDetails />} />
-            <Route path="/services" element={<Services />} />
+            {/* <Route path="/services" element={<Services />} /> */}
             <Route path="/signup" element={<SignUpComponent />} />
             <Route path="/blogs" element={<BlogPage />} />
             <Route path="/blogs/:blogId" element={<BlogDetailPage />} />        

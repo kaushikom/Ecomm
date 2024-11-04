@@ -10,6 +10,7 @@ const Account = () => {
   const [lastName, setLastName] = useState(user?.lastName || '');
   const [companyName, setCompanyName] = useState(user?.company || '');
   const [location, setLocation] = useState(user?.location || '');
+  const [phone,setPhone] = useState(user?.phone || '');
   const [oldPassword, setOldPassword] = useState('');
   const [newPassword,setNewPassword] = useState('');
 
@@ -17,7 +18,8 @@ const Account = () => {
   e.preventDefault();
   console.log('Before Update Call');
   try {
-    const result = await update(user._id, lastName, companyName, location);
+    console.log("Phone: ",phone)
+    const result = await update(user._id, lastName, companyName, location, phone);
     console.log('Update Success:', result);
     toast.success('Updated');    
   } catch (error) {
@@ -51,6 +53,7 @@ const handlePwdUpdate = async (e)=>{
                        <div className='flex mt-4 items-center gap-4 justify-between pb-2 border-b-2 border-gray-200 max-w-[300px]'><h3 className='text-lg font-bold'>Email:</h3>{email}</div>
                        <div className='flex mt-4 items-center gap-4 justify-between pb-2 border-b-2 border-gray-200 max-w-[300px]'><h3 className='text-lg font-bold'>Company:</h3> <input value={companyName} onChange={e=>setCompanyName(e.target.value)} type="text" placeholder='Enter Company Name' className='focus:outline-none text-end' /></div>
                        <div className='flex mt-4 items-center gap-4 justify-between pb-2 border-b-2 border-gray-200 max-w-[300px]'><h3 className='text-lg font-bold'>Location:</h3> <input value={location} onChange={e=>setLocation(e.target.value)} type="text" placeholder='Ex: Boston, USA' className='focus:outline-none text-end' /></div>
+                       <div className='flex mt-4 items-center gap-4 justify-between pb-2 border-b-2 border-gray-200 max-w-[300px]'><h3 className='text-lg font-bold'>Phone:</h3> <input value={phone} onChange={e=>setPhone(e.target.value)} type="text" placeholder='Ex: +91 987654321' className='focus:outline-none text-end' /></div>
                        <button className='w-full px-4 py-2 my-6 text-white uppercase bg-blue-600 rounded-md hover:bg-blue-500'>Update</button>
            </form>
           <div className='mt-8 w-[300px]'>

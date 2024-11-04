@@ -7,6 +7,8 @@ import { categoryRouter } from "./routes/categoryRoutes.js";
 import { serviceRouter } from "./routes/serviceRoutes.js";
 import { taskRouter } from "./routes/taskRoutes.js";
 import { paymentRouter } from "./routes/paymentRoute.js";
+import { Service } from "./models/service.model.js";
+import { Category } from "./models/category.model.js";
 const app = express();
 
 // Middlewares
@@ -32,5 +34,21 @@ app.use("/api/category", categoryRouter);
 app.use("/api/service", serviceRouter);
 app.use("/api/task", taskRouter);
 app.use("/api/payment", paymentRouter);
+
+// Search
+app.get("/api/search", async (req, res) => {
+  const searchTerm = req.query.q;
+  try {
+    const services = await Service.find({
+      name: { $regex: searchTerm, $options: "i" },
+    });
+    const categories = await Category.find({
+      name: { $regex: searchTerm, $options: "i" },
+    });
+    res.json({ services, categories });
+  } catch (error) {
+    res.status(500).json({ error: "Failed to search" });
+  }
+});
 
 export { app };
