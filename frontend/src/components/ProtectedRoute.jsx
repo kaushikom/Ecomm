@@ -4,11 +4,15 @@ import { Navigate, Outlet } from 'react-router-dom';
 import useStore from '../store/store';
 
 const ProtectedRoute = ({loginPage}) => {
-  const { isLoggedIn } = useStore();
+  const { isAuthenticated, user } = useStore();
 
-  if (!isLoggedIn) {
+  
+  if (!isAuthenticated) {
     // Redirect to login page if not logged in
     return <Navigate to={loginPage} />;
+  }
+  if(!user.isVerified){
+    return <Navigate to="/verify-email"/>
   }
 
   // Allow access if the user is logged in

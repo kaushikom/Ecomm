@@ -9,9 +9,15 @@ import {
   refreshAccessToken,
   verifyEmail,
   forgotPassword,
+  resetPassword,
+  checkAuth,
 } from "../controllers/userController.js";
+import { verifyToken } from "../middlewares/verifyToken.js";
 
 const userRouter = express.Router();
+
+// check if user is authenticated
+userRouter.get("/check-auth", verifyToken, checkAuth);
 
 // login route
 userRouter.post("/login", loginUser);
@@ -28,6 +34,8 @@ userRouter.post("/update", updateUserProfile);
 userRouter.post("/getUser", getUserById);
 // Update userpassword
 userRouter.post("/updatePwd", updatePwd);
+// Reset password
+userRouter.post("/reset-password/:token", resetPassword);
 
 // test
 userRouter.post("/test", (req, res) =>

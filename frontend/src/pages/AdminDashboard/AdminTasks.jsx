@@ -107,6 +107,7 @@ const Task = () => {
 
   useEffect(()=>{
     fetchAllTasks()
+    console.log(tasks)
   },[])
   const handleDelete = async(id) => {
     if(confirm('Confirm Delete?')){

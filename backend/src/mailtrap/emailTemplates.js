@@ -93,3 +93,97 @@ export const PASSWORD_RESET_REQUEST_TEMPLATE = `
 </body>
 </html>
 `;
+export const PASSWORD_UPDATE_CONFIRMATION_TEMPLATE = `
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Password Updated Successfully</title>
+</head>
+<body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
+  <div style="background: linear-gradient(to right, #4CAF50, #45a049); padding: 20px; text-align: center;">
+    <h1 style="color: white; margin: 0;">Password Updated</h1>
+  </div>
+  <div style="background-color: #f9f9f9; padding: 20px; border-radius: 0 0 5px 5px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+    <p>Hello,</p>
+    <p>Your password has been updated successfully. If you made this change, no further action is required.</p>
+    <p>If you did not update your password, please contact our support team immediately to secure your account.</p>
+    <p>Best regards,<br>Code Backward Lab</p>
+  </div>
+  <div style="text-align: center; margin-top: 20px; color: #888; font-size: 0.8em;">
+    <p>This is an automated message, please do not reply to this email.</p>
+  </div>
+</body>
+</html>
+`;
+export const STATUS_UPDATE_TEMPLATE = `
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Task Status Update</title>
+</head>
+<body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
+  <div style="background: linear-gradient(to right, #4CAF50, #45a049); padding: 20px; text-align: center;">
+    <h1 style="color: white; margin: 0;">Task Status Update</h1>
+  </div>
+  <div style="background-color: #f9f9f9; padding: 20px; border-radius: 0 0 5px 5px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+    <p>Hello,</p>
+    <p>We wanted to update you on the status of your task:</p>
+    <table style="width: 100%; margin: 20px 0; border-collapse: collapse;">
+      <tr>
+        <td style="font-weight: bold; padding: 10px; background-color: #f0f0f0; border: 1px solid #ddd;">Task Name</td>
+        <td style="padding: 10px; border: 1px solid #ddd;">{taskName}</td>
+      </tr>
+      <tr>
+        <td style="font-weight: bold; padding: 10px; background-color: #f0f0f0; border: 1px solid #ddd;">New Status</td>
+        <td style="padding: 10px; border: 1px solid #ddd;">{taskStatus}</td>
+      </tr>
+    </table>
+    <p>If you have any questions, feel free to reach out to us.</p>
+    <p>Best regards,<br>Code Backward Lab</p>
+  </div>
+  <div style="text-align: center; margin-top: 20px; color: #888; font-size: 0.8em;">
+    <p>This is an automated message, please do not reply to this email.</p>
+  </div>
+</body>
+</html>
+`;
+export const QUERY_RECEIVED_TEMPLATE = `
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>We’ve Received Your Request</title>
+</head>
+<body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
+  <div style="background: linear-gradient(to right, #4CAF50, #45a049); padding: 20px; text-align: center;">
+    <h1 style="color: white; margin: 0;">Request Received</h1>
+  </div>
+  <div style="background-color: #f9f9f9; padding: 20px; border-radius: 0 0 5px 5px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+    <p>Hello,</p>
+    <p>Thank you for reaching out to us! We’ve received your request and are currently reviewing it. Our team will get back to you as soon as possible.</p>
+    <p>Here are the details of your request:</p>
+    <table style="width: 100%; margin: 20px 0; border-collapse: collapse;">
+      <tr>
+        <td style="font-weight: bold; padding: 10px; background-color: #f0f0f0; border: 1px solid #ddd;">Request Title</td>
+        <td style="padding: 10px; border: 1px solid #ddd;">{queryTitle}</td>
+      </tr>
+      <tr>
+        <td style="font-weight: bold; padding: 10px; background-color: #f0f0f0; border: 1px solid #ddd;">Details</td>
+        <td style="padding: 10px; border: 1px solid #ddd;">{queryDetails}</td>
+      </tr>
+    </table>
+    <p>If you have additional information to add, feel free to reply to this message.</p>
+    <p>Thank you for choosing Code Backward Lab. We appreciate your patience and will be in touch soon.</p>
+    <p>Best regards,<br>Code Backward Lab Team</p>
+  </div>
+  <div style="text-align: center; margin-top: 20px; color: #888; font-size: 0.8em;">
+    <p>This is an automated message, please do not reply to this email.</p>
+  </div>
+</body>
+</html>
+`;

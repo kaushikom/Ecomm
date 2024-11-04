@@ -8,7 +8,6 @@ const Sidebar = () => {
 
   const menuItems = [
     { name: 'Tasks', icon: FileCheck, path: '/admin/tasks' },
-    { name: 'Track Tasks', icon: Clock4, path: '/admin/track' },
     { name: 'Payments', icon: History, path: '/admin/payments' },
     {name:'Categories', icon:LayoutGrid, path:'/admin/categories'},
     {name:'Services',icon: Layers, path:'/admin/services'}

@@ -1,6 +1,10 @@
 import { Service } from "../models/service.model.js";
 import { User } from "../models/user.model.js";
 import { Task } from "../models/task.model.js";
+import {
+  sendStatusUpdateEmail,
+  sendQueryReceivedEmail,
+} from "../mailtrap/emails.js";
 
 const addNewTask = async (req, res) => {
   const { serviceId, userId, message } = req.body;
@@ -33,6 +37,11 @@ const addNewTask = async (req, res) => {
       { path: "serviceType", select: "name" },
       { path: "owner", select: "firstName email" },
     ]);
+    await sendQueryReceivedEmail(
+      populatedTask.owner.email,
+      populatedTask.serviceType.name,
+      populatedTask.message
+    );
     res.status(200).json({
       success: true,
       message: "Task created successfully",
@@ -170,8 +179,16 @@ const updateTaskStatus = async (req, res) => {
       id,
       { status: newStatus },
       { new: true } // Return the updated document
+    ).populate([
+      { path: "owner", select: "email" },
+      { path: "serviceType", select: "name" },
+    ]);
+    // console.log(updatedTask);
+    await sendStatusUpdateEmail(
+      updatedTask.owner.email,
+      updatedTask.status,
+      updatedTask.serviceType.name
     );
-
     return res.status(200).json({
       success: true,
       message: "Task status updated successfully",

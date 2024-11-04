@@ -2,9 +2,14 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import axios from "axios";
 import { Trophy } from "lucide-react";
+import ForgotPassword from "../pages/ForgotPassword";
+
+axios.defaults.withCredentials = true;
 
 const useStore = create((set, get) => ({
   user: null,
+  isAuthenticated: false,
+  isCheckingAuth: true,
   error: null,
   isLoggedIn: false,
   cat: [],
@@ -22,8 +27,7 @@ const useStore = create((set, get) => ({
           password,
         }
       );
-      set({ user: response.data.user, error: null, isLoggedIn: true }); // adjust based on your response structure
-      localStorage.setItem("token", response.data.token);
+      set({ user: response.data.user, error: null, isAuthenticated: true }); // adjust based on your response structure
       return response.data.user;
     } catch (error) {
       const errorMessage =
@@ -84,7 +88,7 @@ const useStore = create((set, get) => ({
           password,
         }
       );
-      set({ user: response.data, error: null }); // adjust based on your response structure
+      set({ user: response.data, isAuthenticated: true, error: null }); // adjust based on your response structure
     } catch (error) {
       const errorMessage =
         error.response && error.response.data && error.response.data.error
@@ -92,6 +96,36 @@ const useStore = create((set, get) => ({
           : "SignUp failed"; // Get error message from response
       set({ error: errorMessage });
       throw new Error(errorMessage);
+    }
+  },
+  verifyEmail: async (verificationCode) => {
+    try {
+      const response = await axios.post(
+        "http://localhost:4000/api/user/verify",
+        {
+          code: verificationCode,
+        }
+      );
+      console.log(response.data);
+      set({ user: response.data.user, isAuthenticated: true });
+    } catch (error) {
+      throw new Error(error);
+    }
+  },
+  checkAuth: async () => {
+    set({ isCheckingAuth: true });
+    try {
+      const response = await axios.get(
+        "http://localhost:4000/api/user/check-auth"
+      );
+      set({
+        user: response.data.user,
+        isAuthenticated: true,
+        isCheckingAuth: false,
+      });
+    } catch (error) {
+      set({ isCheckingAuth: false, isAuthenticated: false });
+      throw new Error(error.message);
     }
   },
   getUser: async (userId) => {
@@ -112,7 +146,37 @@ const useStore = create((set, get) => ({
       throw new Error(errorMessage);
     }
   },
-  logout: () => set({ user: null }),
+  logout: async () => {
+    try {
+      await axios.post("http://localhost:4000/api/user/logout");
+      set({ user: null, isAuthenticated: false });
+    } catch (error) {
+      throw new Error(error.message);
+    }
+  },
+  forgotPassword: async (email) => {
+    try {
+      const response = await axios.post(
+        "http://localhost:4000/api/user/forgot-password",
+        {
+          email,
+        }
+      );
+      return response.data.message;
+    } catch (error) {
+      throw new Error(error.message);
+    }
+  },
+  resetPassword: async (token, password) => {
+    try {
+      const response = await axios.post(
+        `http://localhost:4000/api/user/reset-password/${token}`,
+        { password }
+      );
+    } catch (error) {
+      throw new Error(error.message);
+    }
+  },
 
   // Categories actions
   getAllCat: async () => {

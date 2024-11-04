@@ -27,15 +27,23 @@ import AdminServices from './pages/AdminDashboard/AdminServices';
 import { LoaderCircle, ServerCrash } from 'lucide-react';
 import Success from './pages/Success';
 import Failed from './pages/Failed';
+import EmailVerification from './pages/EmailVerification';
+import ForgotPassword from './pages/ForgotPassword';
+import ResetPassword from './pages/ResetPassword';
 
 const App = () => {
- const {getAllCat, getServices} = useStore();
+ const {getAllCat, getServices, isCheckingAuth,checkAuth,isAuthenticated,user} = useStore();
  const [loading,setLoading] = useState(true);
  const [error,setError] = useState(false);
  useEffect(()=>{
   setCategories();
   setServices();
+  checkAuth();
  },[])
+
+ console.log("Authentication: ", isAuthenticated);
+ console.log(user);
+ 
 
  const setCategories = async() =>{
   setLoading(true);
@@ -88,6 +96,7 @@ try {
             <Route path="/blogs" element={<BlogPage />} />
             <Route path="/blogs/:blogId" element={<BlogDetailPage />} />        
             <Route path="/login" element={<Login />} />
+            <Route path="/verify-email" element={<EmailVerification />} />
             <Route path="/success" element={<Success />} />
             <Route path="/failed" element={<Failed />} />
 
@@ -101,6 +110,8 @@ try {
              <Route path="/admin/services" element={<AdminServices />} />
             </Route>
             
+             <Route path="/forgot-password" element={<ForgotPassword />} />
+             <Route path="/reset-password/:token" element={<ResetPassword />} />
             {/*User Protected Routes */}
             <Route element={<ProtectedRoute loginPage="/login"/>}>
              <Route path="/cart" element={<Cart />} />

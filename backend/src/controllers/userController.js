@@ -1,11 +1,16 @@
 import { User } from "../models/user.model.js";
 import jwt from "jsonwebtoken";
 import crypto from "crypto";
+import bcrypt from "bcrypt";
 import {
   sendVerificationEmail,
   sendWelcomeEmail,
   sendPasswordResetEmail,
+  sendPasswordUpdateEmail,
+  sendResetSuccessEmail,
 } from "../mailtrap/emails.js";
+import { resolveSoa } from "dns";
+import { userRouter } from "../routes/userRoutes.js";
 
 const generateTokenAndSetCookie = async (res, id) => {
   try {
@@ -84,7 +89,7 @@ const forgotPassword = async (req, res) => {
         .status(400)
         .json({ success: false, message: "User not found" });
     }
-    const resetToken = crypto.randomBytes(20).toString();
+    const resetToken = crypto.randomBytes(20).toString("hex");
     const resetTokenExpiresAt = Date.now() + 1 * 60 * 60 * 1000; //1 hr
 
     user.resetPasswordToken = resetToken;
@@ -96,7 +101,14 @@ const forgotPassword = async (req, res) => {
       `${process.env.CLIENT_URL}/reset-password/${resetToken}`
     );
     return res.status(200).json({ success: true, message: "Email link sent" });
-  } catch (error) {}
+  } catch (error) {
+    console.log("Error sending reset password : ", error);
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error",
+      error,
+    });
+  }
 };
 // Signup User
 const signupUser = async (req, res) => {
@@ -151,12 +163,40 @@ const updatePwd = async (req, res) => {
   const { userId, newPassword, oldPassword } = req.body;
   try {
     const updatedUser = await User.updatePwd(userId, oldPassword, newPassword);
+    await sendPasswordUpdateEmail(updatedUser.email);
     res
       .status(200)
       .json({ message: "Password updated successfully", user: updatedUser });
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
+};
+const resetPassword = async (req, res) => {
+  const { token } = req.params;
+  const { password } = req.body;
+  try {
+    // Find user using resetpasswordtoken
+    const user = await User.findOne({
+      resetPasswordToken: token,
+      resetPasswordExpiresAt: { $gt: Date.now() },
+    });
+    if (!user) {
+      res
+        .status(400)
+        .json({ success: false, message: "Invalid or expired reset token" });
+    }
+    // update password
+    const salt = await bcrypt.genSalt(10);
+    const hash = await bcrypt.hash(password, salt);
+    user.password = hash;
+    user.resetPasswordExpiresAt = undefined;
+    user.resetPasswordToken = undefined;
+    await user.save();
+    await sendResetSuccessEmail(user.email);
+    return res
+      .status(200)
+      .json({ success: true, message: "Password reset successful" });
+  } catch (error) {}
 };
 // Refresh Access Token
 const refreshAccessToken = async (req, res) => {
@@ -193,6 +233,28 @@ const refreshAccessToken = async (req, res) => {
     res.status(500).json({ success: false, message: "Internal Server Error" });
   }
 };
+// Check if user is authenticated
+const checkAuth = async (req, res) => {
+  try {
+    const user = await User.findById(req.userId).select("-password");
+    if (!user) {
+      return res
+        .status(400)
+        .json({ success: false, message: "User not found" });
+    }
+    res.status(200).json({
+      success: true,
+      user,
+    });
+  } catch (error) {
+    console.log("Error in checkAuth: ", error);
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error",
+      error,
+    });
+  }
+};
 
 export {
   loginUser,
@@ -204,4 +266,6 @@ export {
   refreshAccessToken,
   verifyEmail,
   forgotPassword,
+  resetPassword,
+  checkAuth,
 };

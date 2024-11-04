@@ -33,7 +33,7 @@ const SignUpForm = () => {
           }
       }).then(async()=>{
            await delay(1500);
-          navigate('/services')
+          navigate('/verify-email')
       })
     }
 }
