@@ -30,20 +30,33 @@ import Failed from './pages/Failed';
 import EmailVerification from './pages/EmailVerification';
 import ForgotPassword from './pages/ForgotPassword';
 import ResetPassword from './pages/ResetPassword';
+import AdminReviews from './pages/AdminDashboard/AdminReviews';
 
 const App = () => {
- const {getAllCat, getServices, isCheckingAuth,checkAuth,isAuthenticated,user} = useStore();
+ const {getAllCat, getServices, getAllReviews,checkAuth,isAuthenticated,user} = useStore();
  const [loading,setLoading] = useState(true);
  const [error,setError] = useState(false);
  useEffect(()=>{
   setCategories();
   setServices();
   checkAuth();
+  setReviews();
  },[])
 
  console.log("Authentication: ", isAuthenticated);
  console.log(user);
  
+ const setReviews = async() =>{
+  setLoading(true);
+  try {
+    await getAllReviews();
+  } catch (error) {
+    console.log("Error while fetching reviews: ", error);
+    setError(true);
+  }finally{
+    setLoading(false)
+  }
+ }
 
  const setCategories = async() =>{
   setLoading(true);
@@ -108,6 +121,7 @@ try {
              <Route path="/admin/payments" element={<AdminPayments />} />
              <Route path="/admin/categories" element={<Categories />} />
              <Route path="/admin/services" element={<AdminServices />} />
+             <Route path="/admin/reviews" element={<AdminReviews />} />
             </Route>
             
              <Route path="/forgot-password" element={<ForgotPassword />} />

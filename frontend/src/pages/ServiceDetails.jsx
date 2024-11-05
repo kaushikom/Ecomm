@@ -7,23 +7,25 @@ import { ChevronDown } from 'lucide-react';
 import ReviewSection from '../components/ReviewSection';
 import { toast, ToastContainer } from 'react-toastify';
 
-const FAQAccordion = () => {
+const FAQAccordion = ({faqs}) => {
   const [openIndex, setOpenIndex] = useState(null);
-
-  const faqs = [
-    {
-      question: "How I can share my files with you?",
-      answer: "You can share your files through our secure file upload system on the project dashboard. Alternatively, you can use cloud storage services like Google Drive or Dropbox and share the link with us."
-    },
-    {
-      question: "Can you provide music for my video?",
-      answer: "Yes, we can provide royalty-free music for your video. We have a vast library of tracks to choose from, or we can create custom music tailored to your project's needs."
-    },
-    {
-      question: "Can you do motion graphics ?",
-      answer: "Absolutely! We offer professional motion graphics services. Our team can create animated logos, title sequences, infographics, and other visual elements to enhance your video content."
-    }
-  ];
+  if(faqs.length < 1){
+    return
+  }
+  // const faqs = [
+  //   {
+  //     question: "How I can share my files with you?",
+  //     answer: "You can share your files through our secure file upload system on the project dashboard. Alternatively, you can use cloud storage services like Google Drive or Dropbox and share the link with us."
+  //   },
+  //   {
+  //     question: "Can you provide music for my video?",
+  //     answer: "Yes, we can provide royalty-free music for your video. We have a vast library of tracks to choose from, or we can create custom music tailored to your project's needs."
+  //   },
+  //   {
+  //     question: "Can you do motion graphics ?",
+  //     answer: "Absolutely! We offer professional motion graphics services. Our team can create animated logos, title sequences, infographics, and other visual elements to enhance your video content."
+  //   }
+  // ];
 
   const toggleQuestion = (index) => {
     setOpenIndex(openIndex === index ? null : index);
@@ -107,23 +109,12 @@ const ServiceDetails = () => {
             {thisService.tags?.map(tag=>(<span key={tag} className="px-3 py-2 text-center bg-gray-200 border-2 border-gray-400 rounded-full ">
               {tag}
             </span>))}
-            {/* <span className="px-3 py-2 text-center bg-gray-200 border-2 border-gray-400 rounded-full ">
-              Web Development
-            </span>
-            <span className="px-3 py-2 text-center bg-gray-200 border-2 border-gray-400 rounded-full">
-              JavaScript
-            </span>
-            <span className="px-3 py-2 text-center bg-gray-200 border-2 border-gray-400 rounded-full">
-              Ecommerce Development
-            </span>
-            <span className="px-3 py-2 text-center bg-gray-200 border-2 border-gray-400 rounded-full">
-              Web3 Development
-            </span> */}
+      
           </div>
           <div className="mt-8">
             <ServiceFeatures />
           </div>
-          <FAQAccordion />
+          <FAQAccordion faqs={thisService.faqs} />
         </div>
 
         {/* Right Section: Details */}

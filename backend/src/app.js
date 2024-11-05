@@ -7,6 +7,7 @@ import { categoryRouter } from "./routes/categoryRoutes.js";
 import { serviceRouter } from "./routes/serviceRoutes.js";
 import { taskRouter } from "./routes/taskRoutes.js";
 import { paymentRouter } from "./routes/paymentRoute.js";
+import { reviewRouter } from "./routes/reviewRoute.js";
 import { Service } from "./models/service.model.js";
 import { Category } from "./models/category.model.js";
 const app = express();
@@ -34,6 +35,7 @@ app.use("/api/category", categoryRouter);
 app.use("/api/service", serviceRouter);
 app.use("/api/task", taskRouter);
 app.use("/api/payment", paymentRouter);
+app.use("/api/review", reviewRouter);
 
 // Search
 app.get("/api/search", async (req, res) => {

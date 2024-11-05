@@ -16,6 +16,7 @@ const useStore = create((set, get) => ({
   services: [],
   tasks: [],
   payments: [],
+  reviews: [],
 
   // User actions
   login: async (email, password) => {
@@ -469,6 +470,90 @@ const useStore = create((set, get) => ({
       );
       console.log(id);
       return response.success;
+    } catch (error) {
+      throw new Error(error.message);
+    }
+  },
+  // Faq actions
+  addFAQ: async (serviceId, question, answer) => {
+    try {
+      const response = await axios.post(
+        `http://localhost:4000/api/service/${serviceId}/faqs`,
+        { question, answer }
+      );
+
+      set((state) => ({
+        services: state.services.map((service) =>
+          service._id === serviceId
+            ? { ...service, faqs: response.data.service.faqs } // Use the complete updated faqs array
+            : service
+        ),
+      }));
+
+      return response.data.service.faqs; // Return the complete faqs array instead of just the new FAQ
+    } catch (error) {
+      throw new Error(error.response?.data?.message || error.message);
+    }
+  },
+  updateFAQ: async (serviceId, faqId, question, answer) => {
+    try {
+      const response = await axios.put(
+        `http://localhost:4000/api/service/${serviceId}/faqs/${faqId}`,
+        { question, answer }
+      );
+      if (response.data.success) {
+        set((state) => ({
+          services: state.services.map((service) =>
+            service._id === serviceId
+              ? { ...service, faqs: response.data.service.faqs }
+              : service
+          ),
+        }));
+        return response.data.service.faqs;
+      }
+    } catch (error) {
+      throw new Error(error.message);
+    }
+  },
+  deleteFAQ: async (serviceId, faqId) => {
+    try {
+      const response = await axios.delete(
+        `http://localhost:4000/api/service/${serviceId}/faqs/${faqId}`
+      );
+      set((state) => ({
+        services: state.services.map((service) =>
+          service._id === serviceId
+            ? {
+                ...service,
+                faqs: service.faqs.filter((faq) => faq._id !== faqId),
+              }
+            : service
+        ),
+      }));
+      return response.data.success;
+    } catch (error) {
+      throw new Error(error.message);
+    }
+  },
+
+  // Reviews
+  getAllReviews: async () => {
+    try {
+      const response = await axios.get(
+        "http://localhost:4000/api/review/getAll"
+      );
+      set({ reviews: response.data.reviews });
+    } catch (error) {
+      throw new Error(error.message);
+    }
+  },
+  getAverageRating: async (serviceId) => {
+    try {
+      const response = await axios.get(
+        `http://localhost:4000/api/review/averageRating/${serviceId}`
+      );
+      console.log(response);
+      return response.data;
     } catch (error) {
       throw new Error(error.message);
     }

@@ -5,6 +5,9 @@ import {
   fetchServicesByCategory,
   deleteService,
   updateService,
+  addFaq,
+  updateFaq,
+  deleteFaq,
 } from "../controllers/serviceController.js";
 
 const serviceRouter = express.Router();
@@ -18,5 +21,10 @@ serviceRouter.get("/fetchByCategory/:id", fetchServicesByCategory);
 serviceRouter.delete("/delete/:id", deleteService);
 // Update service
 serviceRouter.put("/update", updateService);
+
+// FAQ routes
+serviceRouter.post("/:serviceId/faqs", addFaq); // Add FAQ
+serviceRouter.put("/:serviceId/faqs/:faqId", updateFaq); // Update FAQ
+serviceRouter.delete("/:serviceId/faqs/:faqId", deleteFaq); // Delete FAQ
 
 export { serviceRouter };

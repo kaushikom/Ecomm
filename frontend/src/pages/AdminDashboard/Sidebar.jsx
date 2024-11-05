@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { LayoutGrid, FileCheck, Clock4, History, LogOut, Menu, X, Layers } from 'lucide-react';
+import { LayoutGrid, FileCheck, Star, Clock4, History, LogOut, Menu, X, Layers } from 'lucide-react';
 
 const Sidebar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -10,7 +10,8 @@ const Sidebar = () => {
     { name: 'Tasks', icon: FileCheck, path: '/admin/tasks' },
     { name: 'Payments', icon: History, path: '/admin/payments' },
     {name:'Categories', icon:LayoutGrid, path:'/admin/categories'},
-    {name:'Services',icon: Layers, path:'/admin/services'}
+    {name:'Services',icon: Layers, path:'/admin/services'},
+    {name:'Reviews',icon:Star, path:'/admin/reviews'}
   ];
 
   const toggleSidebar = () => setIsOpen(!isOpen);
