@@ -1,11 +1,15 @@
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
+import useStore from '../../store/store';
 import { LayoutGrid, FileCheck, Star, Clock4, History, LogOut, Menu, X, Layers } from 'lucide-react';
 
 const Sidebar = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const {logout} = useStore()
   const location = useLocation();
-
+const handleLogout = () => {
+    logout();
+  }
   const menuItems = [
     { name: 'Tasks', icon: FileCheck, path: '/admin/tasks' },
     { name: 'Payments', icon: History, path: '/admin/payments' },
@@ -54,7 +58,7 @@ const Sidebar = () => {
             </ul>
           </nav>
           <div className="p-4">
-            <button className="flex items-center text-gray-600 hover:text-gray-800">
+            <button onClick={handleLogout} className="flex items-center text-gray-600 hover:text-gray-800">
               <LogOut className="mr-3" size={18} />
               Log out
             </button>

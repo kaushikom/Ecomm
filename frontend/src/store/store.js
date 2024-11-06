@@ -2,7 +2,8 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import axios from "axios";
 import { Trophy } from "lucide-react";
-import ForgotPassword from "../pages/ForgotPassword";
+// import ForgotPassword from "../pages/ForgotPassword";
+// import { updateReview } from "../../../backend/src/controllers/reviewController";
 
 axios.defaults.withCredentials = true;
 
@@ -552,8 +553,62 @@ const useStore = create((set, get) => ({
       const response = await axios.get(
         `http://localhost:4000/api/review/averageRating/${serviceId}`
       );
-      console.log(response);
       return response.data;
+    } catch (error) {
+      throw new Error(error.message);
+    }
+  },
+  getReviewsByService: async (serviceId) => {
+    try {
+      const response = await axios.get(
+        `http://localhost:4000/api/review/getBy/service/${serviceId}`
+      );
+      return response.data.reviews;
+    } catch (error) {
+      throw new Error(error.message);
+    }
+  },
+  getReviewByTask: async (taskId) => {
+    try {
+      const response = await axios.get(
+        `http://localhost:4000/api/review/getBy/task/${taskId}`
+      );
+      return response.data.reviews[0];
+    } catch (error) {
+      throw new Error(error.message);
+    }
+  },
+  addReview: async (taskId, rating, description) => {
+    try {
+      const response = await axios.post(
+        `http://localhost:4000/api/review/add/${taskId}`,
+        { rating, description }
+      );
+      return response.data.review;
+    } catch (error) {
+      throw new Error(error.message);
+    }
+  },
+  updateReview: async (reviewId, rating, description) => {
+    try {
+      const response = await axios.put(
+        `http://localhost:4000/api/review/update/${reviewId}`,
+        {
+          rating,
+          description,
+        }
+      );
+      return response.data.updatedReview;
+    } catch (error) {
+      throw new Error(error.message);
+    }
+  },
+  deleteReview: async (reviewId) => {
+    try {
+      const response = await axios.delete(
+        `http://localhost:4000/api/review/delete/${reviewId}`
+      );
+      return response.data.success;
     } catch (error) {
       throw new Error(error.message);
     }

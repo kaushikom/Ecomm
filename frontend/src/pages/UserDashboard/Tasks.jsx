@@ -5,7 +5,7 @@ import DateFormatter from '../../components/DateFormatter.jsx'
 import { Timeline } from 'rsuite';
 import 'rsuite/Timeline/styles/index.css';
 import { toast, ToastContainer } from 'react-toastify';
-import { NotebookPen,CalendarCheck, Handshake,Loader, PartyPopper, Search,ChevronDown } from 'lucide-react';
+import { NotebookPen,CalendarCheck, Handshake,Loader, PartyPopper,  Pencil, Trash, Star,ChevronDown } from 'lucide-react';
 
 const TaskTimeline = ({ status }) => {
   const [show, setShow] = useState(false);
@@ -94,7 +94,154 @@ const TaskTimeline = ({ status }) => {
     </div>
   );
 };
+const ReviewCard = ({ taskId }) => {
+  const { getReviewByTask, addReview, updateReview, deleteReview } = useStore();
+  const [review, setReview] = useState(null);
+  const [isEditing, setIsEditing] = useState(false);
+  const [rating, setRating] = useState(0);
+  const [description, setDescription] = useState('');
+  const [loading, setLoading] = useState(true);
 
+  useEffect(() => {
+    fetchReview();
+  }, [taskId]);
+
+  const fetchReview = async () => {
+    try {
+      const existingReview = await getReviewByTask(taskId);
+      if (existingReview) {
+        setReview(existingReview);
+        setRating(existingReview.rating);
+        setDescription(existingReview.description);
+        console.log("Review exists: ",existingReview);
+        
+      }
+    } catch (error) {
+      toast.error('Error fetching review');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      if (review) {
+        await updateReview(review._id, rating, description);
+        toast.success('Review updated successfully');
+      } else {
+        await addReview(taskId, rating, description);
+        toast.success('Review added successfully');
+      }
+      fetchReview();
+      setIsEditing(false);
+    } catch (error) {
+      toast.error(error.message);
+    }
+  };
+
+  const handleDelete = async () => {
+    try {
+      await deleteReview(review._id);
+      setReview(null);
+      setRating(0);
+      setDescription('');
+      toast.success('Review deleted successfully');
+    } catch (error) {
+      toast.error(error.message);
+    }
+  };
+
+  if (loading) {
+    return <div className="mt-4 text-gray-600">Loading review...</div>;
+  }
+
+  if (isEditing || !review) {
+    return (
+      <form onSubmit={handleSubmit} className="mt-4">
+        <h3 className="mb-4 text-lg font-semibold">
+          {review ? 'Edit Review' : 'Add Review'}
+        </h3>
+        <div className="flex items-center mb-4 space-x-1">
+          {[1, 2, 3, 4, 5].map((star) => (
+            <button
+              key={star}
+              type="button"
+              onClick={() => setRating(star)}
+              className="focus:outline-none"
+            >
+              <Star
+                className={`w-6 h-6 ${
+                  star <= rating ? 'fill-yellow-400 text-yellow-400' : 'text-gray-300'
+                }`}
+              />
+            </button>
+          ))}
+        </div>
+        <textarea
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+          className="w-full p-2 mb-4 border rounded-md"
+          placeholder="Write your review..."
+          rows="3"
+          required
+        />
+        <div className="flex space-x-2">
+          <button
+            type="submit"
+            className="px-4 py-2 text-white bg-blue-500 rounded-md hover:bg-blue-600"
+          >
+            {review ? 'Update' : 'Submit'}
+          </button>
+          <button
+            type="button"
+            onClick={() => {
+              setIsEditing(false);
+              setRating(review ? review.rating : 0);
+              setDescription(review ? review.description : '');
+            }}
+            className="px-4 py-2 text-gray-700 bg-gray-200 rounded-md hover:bg-gray-300"
+          >
+            Cancel
+          </button>
+        </div>
+      </form>
+    );
+  }
+
+  return (
+    <div className="mt-4">
+      <div className="flex items-center justify-between mb-2">
+        <h3 className="text-lg font-semibold">Your Review</h3>
+        <div className="flex gap-4">
+          <button
+            onClick={() => setIsEditing(true)}
+            className="p-2 text-white transition-transform bg-black border-4 border-black rounded-full hover:-translate-y-1"
+          >
+            <Pencil size={18}/>
+          </button>
+          <button
+            onClick={handleDelete}
+            className="p-2 text-white transition-transform bg-red-600 rounded-full hover:-translate-y-1"
+          >
+           <Trash />
+          </button>
+        </div>
+      </div>
+      <div className="flex mb-2 space-x-1">
+        {[1, 2, 3, 4, 5].map((star) => (
+          <Star
+            key={star}
+            className={`w-5 h-5 ${
+              star <= review.rating ? 'fill-yellow-400 text-yellow-400' : 'text-gray-300'
+            }`}
+          />
+        ))}
+      </div>
+      <p className="text-gray-700">{review.description}</p>
+    </div>
+  );
+};
 const Tasks = () => {
     const {user,getTasksByUser, tasks} = useStore();
     const [loading, setLoading] = useState(true);
@@ -135,6 +282,7 @@ const Tasks = () => {
   <span className='font-semibold'>Last Updated:</span> <DateFormatter date={task.updatedAt} />
 </div>
   <TaskTimeline status={task.status} />
+   {(task.status == 'Completed') && <ReviewCard taskId={task._id} />} 
         </div>
           </div>
             )

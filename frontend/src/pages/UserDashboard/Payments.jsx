@@ -23,7 +23,7 @@ const UpcomingCard = ({payment}) => {
     const stripe = await loadStripe('pk_test_51MmxiySCi4mhFbr9FP1JGQc5Goshkrtt2DkRaa6wkahArGt9tBaqrLFXWQ24k8sUbCEejgHuC6xqem74TYCB3rHC00zDpFgvW7');
     const response = await axios.post("http://localhost:4000/api/payment/create-checkout-session", {
       paymentId,
-      successUrl: "http://localhost:5173/success",
+      successUrl: "http://localhost:5173/user/payments",
       cancelUrl: "http://localhost:5173/failed"
     });
     console.log(response);

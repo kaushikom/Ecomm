@@ -12,17 +12,17 @@ import { Service } from "./models/service.model.js";
 import { Category } from "./models/category.model.js";
 const app = express();
 
+app.post(
+  "/stripe/webhook",
+  express.raw({ type: "application/json" }),
+  handleStripeWebhook
+);
 // Middlewares
 app.use(
   cors({
     origin: process.env.CORS_ORIGIN,
     credentials: true,
   })
-);
-app.post(
-  "/stripe/webhook",
-  express.raw({ type: "application/json" }),
-  handleStripeWebhook
 );
 app.use(express.json({ limit: "16kb" }));
 app.use(express.urlencoded({ extended: true, limit: "16kb" }));
