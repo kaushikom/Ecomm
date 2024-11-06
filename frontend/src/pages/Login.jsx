@@ -102,12 +102,10 @@ const navigate = useNavigate();
         onChange={(e) => setPassword(e.target.value)}
         placeholder="Password"
       />
+      <Link to="/forgot-password" className='font-medium text-red-900 hover:text-red-700'>Forgot password?</Link>
       <button className='py-2 text-white uppercase bg-red-800 rounded-md hover:bg-red-700' type="submit">Login</button>
     </form>
-
           </div>
-
-          
         </div>
       </div>
       <ToastContainer
