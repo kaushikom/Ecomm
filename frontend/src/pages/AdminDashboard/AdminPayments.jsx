@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import Sidebar from './Sidebar'
-import { Search, Edit, Save, X, Trash2 } from 'lucide-react'
+import { Search, Edit, Save, X, Trash2,Info } from 'lucide-react'
 import useStore from '../../store/store'
 import DateFormatter from '../../components/DateFormatter'
 
@@ -14,7 +14,8 @@ const Payments = () => {
   const [formData, setFormData] = useState({
     milestoneName: '',
     description: '',
-    price: ''
+    price: '',
+    date: ''
   });
 
   const handleFetchPayment = async() =>{
@@ -44,16 +45,16 @@ const Payments = () => {
     if (formData.milestoneName && formData.description && formData.price) {
       if (editingId !== null) {
         // Update existing payment
-      await updatePayment(editingId,formData.price,formData.milestoneName,formData.description);
+      await updatePayment(editingId,formData.price,formData.milestoneName,formData.description, formData.date);
       await handleFetchPayment();
         setEditingId(null);
       } else {
         // Add new payment
         // console.log(payments[0].task, formData.price,formData.milestoneName,formData.description)
-       await addPayments(search, formData.price,formData.milestoneName,formData.description);
+       await addPayments(search, formData.price,formData.milestoneName,formData.description, formData.date);
        handleFetchPayment();
       }
-      setFormData({ milestoneName: '', description: '', price: '' });
+      setFormData({ milestoneName: '', description: '', price: '', date:'' });
       setToggleForm(false);
     } else {
       alert('Please fill all fields');
@@ -64,14 +65,15 @@ const Payments = () => {
     setFormData({
       milestoneName:payment.milestone,
       description:payment.description,
-      price:payment.amount
+      price:payment.amount,
+      date:payment.dueDate
     });
     setEditingId(payment._id);
     setToggleForm(true);
   };
 
   const handleCancelEdit = () => {
-    setFormData({ milestoneName: '', description: '', price: '' });
+    setFormData({ milestoneName: '', description: '', price: '', date:'' });
     setEditingId(null);
     setToggleForm(false);
   };
@@ -91,6 +93,7 @@ const Payments = () => {
       <Sidebar />
       <main className="flex-grow p-8">
         <h1 className='text-4xl'>Payments</h1>
+        <p className='flex items-center gap-2 mt-4 text-gray-600'><Info size={20}/>Paste Task Id below to create, delete and edit payments of that specific task</p>
         {/* Create payments */}
         <div className='border-[1px] flex justify-between max-w-[400px] bg-white shadow-md my-4 border-gray-300 px-4 py-2 rounded-lg text-xl'>
           <input value={search} onChange={e=>setSearch(e.target.value)} className='bg-transparent focus:outline-none' type="text" placeholder='Enter task Id' />
@@ -115,6 +118,7 @@ const Payments = () => {
                       <p className='flex justify-between capitalize'><strong>Description:</strong> {payment.description ?? 'Null'}</p>
                       <p className='flex justify-between capitalize'><strong>Price:</strong> ${payment.amount}</p>
                       <p className='flex justify-between capitalize'><strong>Status:</strong> {payment.status}</p>
+                      {payment.status !== 'paid'&& (<p className='flex justify-between capitalize'><strong>Due:</strong><DateFormatter date={payment.dueDate} /></p>)}
                       <p className='flex justify-between capitalize'><strong>Last Updated:</strong> <DateFormatter date={payment.updatedAt} /></p>
                     {payment.status == 'paid' ? '' : (
  <div className='flex gap-2 mt-2'>
@@ -169,6 +173,14 @@ const Payments = () => {
                     value={formData.price}
                     onChange={handleInputChange}
                     placeholder='Price' 
+                    className='p-2 border rounded'
+                  />
+                  <input 
+                    type="date" 
+                    name="date"
+                    value={formData.date}
+                    onChange={handleInputChange}
+                    placeholder='Due Date' 
                     className='p-2 border rounded'
                   />
                   <div className='flex gap-2'>

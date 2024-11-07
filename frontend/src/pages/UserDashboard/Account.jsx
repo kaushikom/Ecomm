@@ -13,6 +13,7 @@ const Account = () => {
   const [phone,setPhone] = useState(user?.phone || '');
   const [oldPassword, setOldPassword] = useState('');
   const [newPassword,setNewPassword] = useState('');
+  const [cnfNewPassword, setCnfNewPassword] = useState('');
 
   const handleDetailsUpdate = async (e) => {
   e.preventDefault();
@@ -29,6 +30,11 @@ const Account = () => {
 };
 const handlePwdUpdate = async (e)=>{
   e.preventDefault();
+  if(cnfNewPassword !== newPassword){
+    toast.error("Confirm Password field doesn't match with new password")
+    setCnfNewPassword('');
+    setNewPassword('');
+  }
   try {
      const result = await updatePwd(user._id, oldPassword, newPassword);
     console.log('Update Success:', result);
@@ -56,6 +62,7 @@ const handlePwdUpdate = async (e)=>{
                        <div className='flex mt-4 items-center gap-4 justify-between pb-2 border-b-2 border-gray-200 max-w-[300px]'><h3 className='text-lg font-bold'>Phone:</h3> <input value={phone} onChange={e=>setPhone(e.target.value)} type="text" placeholder='Ex: +91 987654321' className='focus:outline-none text-end' /></div>
                        <button className='w-full px-4 py-2 my-6 text-white uppercase bg-blue-600 rounded-md hover:bg-blue-500'>Update</button>
            </form>
+           {user.type !== 'admin' && (
           <div className='mt-8 w-[300px]'>
             <form onSubmit={handlePwdUpdate}>
               <h1 className='mb-8 text-xl font-bold'>Change Password</h1>
@@ -66,9 +73,14 @@ const handlePwdUpdate = async (e)=>{
               <label className='mt-4 font-bold' htmlFor="new">New Password</label>
               <br />
               <input id='new' type="password" placeholder='Enter new password' value={newPassword} onChange={e=>setNewPassword(e.target.value)} className='w-full px-4 py-2 my-4 border-2 border-gray-400 rounded-lg' />
+              <br />
+              <label className='mt-4 font-bold' htmlFor="new">Confirm New Password</label>
+              <br />
+              <input id='new' type="password" placeholder='Confirm new password' value={cnfNewPassword} onChange={e=>setCnfNewPassword(e.target.value)} className='w-full px-4 py-2 my-4 border-2 border-gray-400 rounded-lg' />
               <button className='px-4 py-2 my-6 text-white uppercase bg-blue-600 rounded-md hover:bg-blue-500'>Confirm</button>
             </form>
           </div>
+           )}
          </div>
         </main>
          <ToastContainer

@@ -76,7 +76,7 @@ const TopCollectionSlider = () => {
         <div className="flex items-center justify-between">
           {visibleProducts.map((product) => (
             <div key={product.id} className="w-1/4 px-2">
-              <img src={product.image} alt={product.name} className="w-full h-auto mb-2" />
+              <div className='h-[200px]'><img src={product.image} alt={product.name} className="h-[200px] mb-2 " /></div>
               <div className="flex mb-1">
                 {[...Array(5)].map((_, i) => (
                   <span key={i} className={`text-yellow-400 ${i < product.rating ? 'fill-current' : 'stroke-current'}`}>★</span>

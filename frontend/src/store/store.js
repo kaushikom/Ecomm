@@ -695,7 +695,7 @@ const useStore = create((set, get) => ({
       throw new Error(error.message);
     }
   },
-  addPayments: async (taskId, amount, milestone, description) => {
+  addPayments: async (taskId, amount, milestone, description, dueDate) => {
     try {
       const response = await axios.post(
         "http://localhost:4000/api/payment/addNew",
@@ -704,6 +704,7 @@ const useStore = create((set, get) => ({
           amount,
           milestone,
           description,
+          dueDate,
         }
       );
       console.log(response.data.message);
@@ -721,7 +722,7 @@ const useStore = create((set, get) => ({
       throw new Error(error);
     }
   },
-  updatePayment: async (paymentId, amount, milestone, description) => {
+  updatePayment: async (paymentId, amount, milestone, description, dueDate) => {
     try {
       const response = await axios.post(
         "http://localhost:4000/api/payment/update",
@@ -730,6 +731,7 @@ const useStore = create((set, get) => ({
           amount,
           milestone,
           description,
+          dueDate,
         }
       );
       console.log(response);

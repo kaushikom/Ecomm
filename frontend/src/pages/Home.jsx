@@ -47,8 +47,8 @@ const BenefitCard = ({ icon, title, description }) => {
   return (
     <div className="flex flex-col items-start w-[30ch]">
       <div className="mb-4 text-gray-600">{icon}</div>
-      <h3 className="mb-2 text-xl font-semibold text-gray-800">{title}</h3>
-      <p className="text-sm text-gray-600">{description}</p>
+      <h3 className="mb-2 text-2xl font-semibold text-gray-800">{title}</h3>
+      <p className="text-lg text-gray-600">{description}</p>
     </div>
   );
 };
@@ -100,7 +100,7 @@ const FreelanceSearch = () => {
 
   return (
     <div className="p-8 text-center text-white bg-green-900 rounded-lg">
-      <h1 className="mt-20 mb-12 text-4xl font-bold">
+      <h1 className="mt-20 mb-12 font-bold text-7xl">
         Find the right <span className="font-serif text-green-300">freelance</span><br />
         service, right away
       </h1>
@@ -133,7 +133,7 @@ const FreelanceSearch = () => {
         )}
         {results.categories.length > 0 && (
           <div className='p-4'>
-            <h3 className="mb-2 text-lg font-bold  text-start">Categories</h3>
+            <h3 className="mb-2 text-lg font-bold text-start">Categories</h3>
             <ul className='flex flex-col items-start gap-2'>
               {results.categories.map((category) => (
                 <Link className='hover:text-blue-600' to={`/category/${category._id}`} key={category._id}>{category.name}</Link>
@@ -185,7 +185,7 @@ const CategorySection = () => {
       {categories.map((category, index) => (
         <div key={index} className="flex border-[1px] border-gray-200 flex-col w-[20ch] items-center bg-white p-4 rounded-lg shadow-md min-w-[120px]">
           <span className="mb-2 text-2xl">{category.icon}</span>
-          <span className="text-sm text-center">{category.name}</span>
+          <span className="text-lg text-center">{category.name}</span>
         </div>
       ))}
     </div>
@@ -228,7 +228,7 @@ const PopularServicesSection = () => {
 
 const Home = () => {
   return (
-    <div>
+    <div className='px-24'>
       <FreelanceSearch />
       <ServicesShowcase />
       <FreelanceBenefits />

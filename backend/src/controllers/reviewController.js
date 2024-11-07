@@ -107,7 +107,7 @@ export const getReviews = async (req, res) => {
 
   try {
     const reviews = await Review.find({ [searchParam]: searchId }).populate([
-      { path: "user", select: "firstName lastName email" },
+      { path: "user", select: "firstName lastName email company" },
     ]);
     return res.status(200).json({
       success: true,

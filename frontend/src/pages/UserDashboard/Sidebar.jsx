@@ -14,7 +14,7 @@ const Sidebar = () => {
 
   const menuItems = [
     // { name: 'Dashboard', icon: BarChart, path: '/user' },
-    { name: 'Your Tasks', icon: FileCheck, path: '/user/tasks' },
+    { name: 'Your Orders', icon: FileCheck, path: '/user/tasks' },
     { name: 'Payments', icon: History, path: '/user/payments' },
     { name: 'Account', icon: UserPen, path: '/user/account' },
   ];

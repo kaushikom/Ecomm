@@ -7,6 +7,94 @@ import 'rsuite/Timeline/styles/index.css';
 import { toast, ToastContainer } from 'react-toastify';
 import { NotebookPen,CalendarCheck, Handshake,Loader, PartyPopper,  Pencil, Trash, Star,ChevronDown } from 'lucide-react';
 
+// const TaskTimeline = ({ status }) => {
+//   const [show, setShow] = useState(false);
+
+//   // Define the stages in order
+//   const stages = [
+//     {
+//       status: 'Query Raised',
+//       label: 'Query Raised',
+//       date: 'March 1, 2024',
+//       icon: NotebookPen
+//     },
+//     {
+//       status: 'Meeting Booked',
+//       label: 'Meeting Booked',
+//       date: 'March 2, 2024',
+//       icon: CalendarCheck
+//     },
+//     {
+//       status: 'Agreed to T&C',
+//       label: 'Agreed to Terms & Conditions',
+//       date: 'March 2, 2024',
+//       icon: Handshake
+//     },
+//     {
+//       status: 'Task In Progress',
+//       label: 'Task In Progress',
+//       date: 'March 4, 2024',
+//       icon: Loader
+//     },
+//     {
+//       status: 'Completed',
+//       label: 'Task Completed',
+//       date: 'March 5, 2024',
+//       icon: PartyPopper
+//     }
+//   ];
+
+//   const handleShowToggle = () => {
+//     setShow(!show);
+//   };
+
+//   // Find the index of the current status
+//   const currentStageIndex = stages.findIndex(stage => stage.status === status);
+
+//   // Show stages up to and including the current stage
+//   const visibleStages = stages.slice(0, currentStageIndex + 1);
+
+//   return (
+//     <div className="mt-4 bg-white rounded-lg shadow-sm">
+//       <div className="flex items-center justify-between mb-4">
+//         <h1 className="text-xl font-semibold text-slate-700">Status</h1>
+//         <button 
+//           onClick={handleShowToggle}
+//           className="p-1 transition-transform duration-200 rounded-full hover:bg-slate-100"
+//         >
+//           <ChevronDown 
+//             className={`transform transition-transform duration-200 ${show ? 'rotate-180' : ''}`}
+//           />
+//         </button>
+//       </div>
+      
+//       <div className={`overflow-hidden transition-all duration-300 ease-in-out ${show ? 'max-h-96' : 'max-h-0'}`}>
+//         <div className="space-y-6">
+//           {visibleStages.map((stage, index) => (
+//             <div key={stage.status} className="relative flex items-center">
+//               {/* Timeline line */}
+//               {index !== visibleStages.length - 1 && (
+//                 <div className="absolute left-5 top-10 w-0.5 h-full -ml-px bg-slate-200" />
+//               )}
+              
+//               {/* Icon */}
+//               <div className="relative flex items-center justify-center flex-shrink-0 w-10 h-10 bg-white rounded-full">
+//                 <stage.icon className="w-6 h-6 text-blue-600" />
+//               </div>
+              
+//               {/* Content */}
+//               <div className="flex flex-col flex-1 ml-4">
+//                 <h2 className="text-lg font-medium text-slate-900">{stage.label}</h2>
+//                 {/* <p className="mt-1 text-sm text-slate-500">{stage.date}</p> */}
+//               </div>
+//             </div>
+//           ))}
+//         </div>
+//       </div>
+//     </div>
+//   );
+// };
+
 const TaskTimeline = ({ status }) => {
   const [show, setShow] = useState(false);
 
@@ -51,8 +139,31 @@ const TaskTimeline = ({ status }) => {
   // Find the index of the current status
   const currentStageIndex = stages.findIndex(stage => stage.status === status);
 
-  // Show stages up to and including the current stage
-  const visibleStages = stages.slice(0, currentStageIndex + 1);
+  // Function to determine icon and text color based on stage status
+  const getStageStyles = (index) => {
+     if (status === 'Completed') {
+    return 'text-green-600'; // If status is completed, show all stages as green
+  }
+    if (index < currentStageIndex) {
+      return 'text-green-600'; // Completed stages
+    } else if (index === currentStageIndex) {
+      return 'text-orange-500'; // Current stage
+    }
+    return 'text-slate-400'; // Future stages
+  };
+
+  // Function to determine timeline line color
+  const getLineColor = (index) => {
+     if (status === 'Completed') {
+    return 'bg-green-600'; // If status is completed, show all lines as green
+  }
+    if (index < currentStageIndex) {
+      return 'bg-green-600'; // Completed stages
+    } else if (index === currentStageIndex) {
+      return 'bg-orange-500'; // Current stage
+    }
+    return 'bg-slate-200'; // Future stages
+  };
 
   return (
     <div className="mt-4 bg-white rounded-lg shadow-sm">
@@ -70,22 +181,25 @@ const TaskTimeline = ({ status }) => {
       
       <div className={`overflow-hidden transition-all duration-300 ease-in-out ${show ? 'max-h-96' : 'max-h-0'}`}>
         <div className="space-y-6">
-          {visibleStages.map((stage, index) => (
+          {stages.map((stage, index) => (
             <div key={stage.status} className="relative flex items-center">
               {/* Timeline line */}
-              {index !== visibleStages.length - 1 && (
-                <div className="absolute left-5 top-10 w-0.5 h-full -ml-px bg-slate-200" />
+              {index !== stages.length - 1 && (
+                <div 
+                  className={`absolute left-5 top-10 w-0.5 h-full -ml-px ${getLineColor(index)}`}
+                />
               )}
               
               {/* Icon */}
               <div className="relative flex items-center justify-center flex-shrink-0 w-10 h-10 bg-white rounded-full">
-                <stage.icon className="w-6 h-6 text-blue-600" />
+                <stage.icon className={`w-6 h-6 ${getStageStyles(index)}`} />
               </div>
               
               {/* Content */}
               <div className="flex flex-col flex-1 ml-4">
-                <h2 className="text-lg font-medium text-slate-900">{stage.label}</h2>
-                {/* <p className="mt-1 text-sm text-slate-500">{stage.date}</p> */}
+                <h2 className={`text-lg font-medium ${getStageStyles(index)}`}>
+                  {stage.label}
+                </h2>
               </div>
             </div>
           ))}
@@ -94,6 +208,7 @@ const TaskTimeline = ({ status }) => {
     </div>
   );
 };
+
 const ReviewCard = ({ taskId }) => {
   const { getReviewByTask, addReview, updateReview, deleteReview } = useStore();
   const [review, setReview] = useState(null);
@@ -214,18 +329,21 @@ const ReviewCard = ({ taskId }) => {
       <div className="flex items-center justify-between mb-2">
         <h3 className="text-lg font-semibold">Your Review</h3>
         <div className="flex gap-4">
-          <button
+          {new Date(review.createdAt).getTime() > Date.now() - 4*60*60*1000 && (
+  <button
             onClick={() => setIsEditing(true)}
             className="p-2 text-white transition-transform bg-black border-4 border-black rounded-full hover:-translate-y-1"
           >
             <Pencil size={18}/>
           </button>
-          <button
+          ) }
+        
+          {/* <button
             onClick={handleDelete}
             className="p-2 text-white transition-transform bg-red-600 rounded-full hover:-translate-y-1"
           >
            <Trash />
-          </button>
+          </button> */}
         </div>
       </div>
       <div className="flex mb-2 space-x-1">

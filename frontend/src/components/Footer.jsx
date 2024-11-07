@@ -1,4 +1,5 @@
 import { Facebook, Globe, Twitter, Instagram, Rss } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const Footer = () => {
   return (
@@ -69,6 +70,7 @@ const Footer = () => {
               <li>Call Us: 123-456-7898</li>
               <li>Email Us: Support@Fiot.com</li>
               <li>Fax: 123456</li>
+              <li><Link to="/blogs">Blogs</Link></li>
             </ul>
           </div>
         </div>

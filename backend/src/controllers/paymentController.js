@@ -143,7 +143,7 @@ const fetchByTaskId = async (req, res) => {
 };
 
 const updatePayment = async (req, res) => {
-  const { paymentId, amount, milestone, description } = req.body;
+  const { paymentId, amount, milestone, description, dueDate } = req.body;
   if (!paymentId || !amount || !milestone) {
     return res
       .status(400)
@@ -156,6 +156,7 @@ const updatePayment = async (req, res) => {
         amount,
         milestone,
         description,
+        dueDate,
       },
       { new: true }
     );

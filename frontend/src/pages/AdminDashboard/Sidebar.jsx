@@ -11,7 +11,7 @@ const handleLogout = () => {
     logout();
   }
   const menuItems = [
-    { name: 'Tasks', icon: FileCheck, path: '/admin/tasks' },
+    { name: 'All Orders', icon: FileCheck, path: '/admin/tasks' },
     { name: 'Payments', icon: History, path: '/admin/payments' },
     {name:'Categories', icon:LayoutGrid, path:'/admin/categories'},
     {name:'Services',icon: Layers, path:'/admin/services'},

@@ -3,9 +3,7 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import useStore from './store/store';
 import Navbar from './components/Navbar';
 import Home from './pages/Home';
-import Services from './pages/Services';
 import ServiceDetails from './pages/ServiceDetails';
-import Cart from './pages/Cart';
 import SignUpComponent from './pages/SignUp';
 import BlogPage from './pages/Blogs';
 import BlogDetailPage from './pages/BlogDetailPage';
@@ -101,18 +99,20 @@ try {
         <Navbar />
         <main className="container px-4 py-8 mx-auto">
           <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/category/:categoryId" element={<Category />} />
-            <Route path="/services/:serviceId" element={<ServiceDetails />} />
-            {/* <Route path="/services" element={<Services />} /> */}
-            <Route path="/signup" element={<SignUpComponent />} />
-            <Route path="/blogs" element={<BlogPage />} />
-            <Route path="/blogs/:blogId" element={<BlogDetailPage />} />        
-            <Route path="/login" element={<Login />} />
-            <Route path="/verify-email" element={<EmailVerification />} />
-            <Route path="/success" element={<Success />} />
-            <Route path="/failed" element={<Failed />} />
-
+              <Route path="/" element={<Home />} />
+              <Route path="/category/:categoryId" element={<Category />} />
+              <Route path="/services/:serviceId" element={<ServiceDetails />} />
+              {/* <Route path="/services" element={<Services />} /> */}
+              <Route path="/signup" element={<SignUpComponent />} />
+              <Route path="/blogs" element={<BlogPage />} />
+              <Route path="/blogs/:blogId" element={<BlogDetailPage />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/verify-email" element={<EmailVerification />} />
+              <Route path="/success" element={<Success />} />
+              <Route path="/failed" element={<Failed />} />
+               <Route path="/forgot-password" element={<ForgotPassword />} />
+               <Route path="/reset-password/:token" element={<ResetPassword />} />
+             
            {/* Admin protected Routes */}
             <Route element={<ProtectedRoute loginPage="/login" />}>
             <Route path='/admin' element={<AdminTasks/>}/>
@@ -123,12 +123,9 @@ try {
              <Route path="/admin/services" element={<AdminServices />} />
              <Route path="/admin/reviews" element={<AdminReviews />} />
             </Route>
-            
-             <Route path="/forgot-password" element={<ForgotPassword />} />
-             <Route path="/reset-password/:token" element={<ResetPassword />} />
+          
             {/*User Protected Routes */}
             <Route element={<ProtectedRoute loginPage="/login"/>}>
-             <Route path="/cart" element={<Cart />} />
              <Route path="/user" element={<Account />} />
              <Route path="/user/tasks" element={<Tasks />} />
              <Route path="/user/track" element={<TrackTasks />} />
