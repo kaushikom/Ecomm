@@ -18,7 +18,7 @@ import Payments from './pages/UserDashboard/Payments';
 import AdminPayments from './pages/AdminDashboard/AdminPayments'
 import Account from './pages/UserDashboard/Account';
 import Login from './pages/Login';
-import 'react-toastify/dist/ReactToastify.css'; // Import Toastify CSS
+import 'react-toastify/dist/ReactToastify.css'; 
 import ToastContainer from 'rsuite/esm/toaster/ToastContainer';
 import ProtectedRoute from './components/ProtectedRoute';
 import AdminServices from './pages/AdminDashboard/AdminServices';
