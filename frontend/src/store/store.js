@@ -25,7 +25,7 @@ const useStore = create((set, get) => ({
   login: async (email, password) => {
     try {
       const response = await axios.post(
-        "http://16.171.247.39:4000/api/user/login",
+        "https://16.171.247.39:4000/api/user/login",
         {
           email,
           password,
@@ -45,7 +45,7 @@ const useStore = create((set, get) => ({
   updatePwd: async (userId, oldPassword, newPassword) => {
     try {
       const response = await axios.post(
-        `http://${serverIp}:4000/api/user/updatePwd`,
+        `https://${serverIp}:4000/api/user/updatePwd`,
         { userId, oldPassword, newPassword }
       );
       set({ user: response.data.user, error: null, isLoggedIn: true });
@@ -63,7 +63,7 @@ const useStore = create((set, get) => ({
     console.log(phone);
     try {
       const response = await axios.post(
-        `http://${serverIp}:4000/api/user/update`,
+        `https://${serverIp}:4000/api/user/update`,
         {
           userId,
           lastName,
@@ -86,7 +86,7 @@ const useStore = create((set, get) => ({
   signup: async (firstName, lastName, email, password) => {
     try {
       const response = await axios.post(
-        `http://${serverIp}:4000/api/user/signup`,
+        `https://${serverIp}:4000/api/user/signup`,
         {
           firstName,
           lastName,
@@ -107,7 +107,7 @@ const useStore = create((set, get) => ({
   verifyEmail: async (verificationCode) => {
     try {
       const response = await axios.post(
-        `http://${serverIp}:4000/api/user/verify`,
+        `https://${serverIp}:4000/api/user/verify`,
         {
           code: verificationCode,
         }
@@ -122,7 +122,7 @@ const useStore = create((set, get) => ({
     set({ isCheckingAuth: true });
     try {
       const response = await axios.get(
-        `http://${serverIp}:4000/api/user/check-auth`
+        `https://${serverIp}:4000/api/user/check-auth`
       );
       set({
         user: response.data.user,
@@ -137,7 +137,7 @@ const useStore = create((set, get) => ({
   getUser: async (userId) => {
     try {
       const response = await axios.post(
-        `http://${serverIp}:4000/api/user/getUser`,
+        `https://${serverIp}:4000/api/user/getUser`,
         {
           userId,
         }
@@ -154,7 +154,7 @@ const useStore = create((set, get) => ({
   },
   logout: async () => {
     try {
-      await axios.post(`http://${serverIp}:4000/api/user/logout`);
+      await axios.post(`https://${serverIp}:4000/api/user/logout`);
       set({ user: null, isAuthenticated: false });
     } catch (error) {
       throw new Error(error.message);
@@ -163,7 +163,7 @@ const useStore = create((set, get) => ({
   forgotPassword: async (email) => {
     try {
       const response = await axios.post(
-        `http://${serverIp}:4000/api/user/forgot-password`,
+        `https://${serverIp}:4000/api/user/forgot-password`,
         {
           email,
         }
@@ -176,7 +176,7 @@ const useStore = create((set, get) => ({
   resetPassword: async (token, password) => {
     try {
       const response = await axios.post(
-        `http://${serverIp}:4000/api/user/reset-password/${token}`,
+        `https://${serverIp}:4000/api/user/reset-password/${token}`,
         { password }
       );
     } catch (error) {
@@ -188,7 +188,7 @@ const useStore = create((set, get) => ({
   getAllCat: async () => {
     try {
       const response = await axios.get(
-        `http://${serverIp}:4000/api/category/fetchAll`
+        `https://${serverIp}:4000/api/category/fetchAll`
       );
       set({ cat: response.data.categories });
       return response.data.categories;
@@ -204,7 +204,7 @@ const useStore = create((set, get) => ({
   addNewCat: async (name, imageUrl, navDisplay, description) => {
     try {
       const response = await axios.post(
-        `http://${serverIp}:4000/api/category/add`,
+        `https://${serverIp}:4000/api/category/add`,
         {
           name,
           imageUrl,
@@ -225,7 +225,7 @@ const useStore = create((set, get) => ({
   deleteCat: async (id) => {
     try {
       const response = await axios.post(
-        `http://${serverIp}:4000/api/category/delete`,
+        `https://${serverIp}:4000/api/category/delete`,
         {
           id,
         }
@@ -244,7 +244,7 @@ const useStore = create((set, get) => ({
   updateCat: async (id, name, imageUrl, navDisplay, description) => {
     try {
       const response = await axios.put(
-        `http://${serverIp}:4000/api/category/update`,
+        `https://${serverIp}:4000/api/category/update`,
         {
           id,
           name,
@@ -266,7 +266,7 @@ const useStore = create((set, get) => ({
       id: 1,
       name: "IT",
       image:
-        "https://images.pexels.com/photos/1148820/pexels-photo-1148820.jpeg",
+        "httpss://images.pexels.com/photos/1148820/pexels-photo-1148820.jpeg",
       description:
         "Offering IT services like web development, app development, and hosting.",
       tasks: [
@@ -276,14 +276,14 @@ const useStore = create((set, get) => ({
           minPrice: 500,
           maxPrice: 800,
           image:
-            "https://www.qanmos.com/wp-content/uploads/2024/07/1685618197hitech-56458a.jpg",
+            "httpss://www.qanmos.com/wp-content/uploads/2024/07/1685618197hitech-56458a.jpg",
         },
         {
           id: 2,
           name: "App Development",
           minPrice: 700,
           maxPrice: 900,
-          image: "https://ik.trn.asia/uploads/2024/01/1706240490715.png",
+          image: "httpss://ik.trn.asia/uploads/2024/01/1706240490715.png",
         },
         {
           id: 3,
@@ -291,7 +291,7 @@ const useStore = create((set, get) => ({
           minPrice: 140,
           maxPrice: 300,
           image:
-            "https://blog.stoneriverelearning.com/wp-content/uploads/2017/06/CODEHOST111.png",
+            "httpss://blog.stoneriverelearning.com/wp-content/uploads/2017/06/CODEHOST111.png",
         },
       ],
     },
@@ -299,7 +299,7 @@ const useStore = create((set, get) => ({
       id: 2,
       name: "AI & Automation",
       image:
-        "https://images.pexels.com/photos/5473325/pexels-photo-5473325.jpeg",
+        "httpss://images.pexels.com/photos/5473325/pexels-photo-5473325.jpeg",
       description:
         "Leverage AI technologies and automation to enhance business processes.",
       tasks: [
@@ -309,7 +309,7 @@ const useStore = create((set, get) => ({
           minPrice: 600,
           maxPrice: 1200,
           image:
-            "https://cdn.pixabay.com/photo/2023/02/04/17/28/chat-7767693_640.jpg",
+            "httpss://cdn.pixabay.com/photo/2023/02/04/17/28/chat-7767693_640.jpg",
         },
         {
           id: 2,
@@ -317,7 +317,7 @@ const useStore = create((set, get) => ({
           minPrice: 450,
           maxPrice: 900,
           image:
-            "https://res.cloudinary.com/dlpitjizv/image/upload/v1688671391/impact/10_benefits_of_process_automation_Hero_D_2029e82b8a.jpg",
+            "httpss://res.cloudinary.com/dlpitjizv/image/upload/v1688671391/impact/10_benefits_of_process_automation_Hero_D_2029e82b8a.jpg",
         },
       ],
     },
@@ -325,7 +325,7 @@ const useStore = create((set, get) => ({
       id: 3,
       name: "Digital Marketing",
       image:
-        "https://images.pexels.com/photos/3184465/pexels-photo-3184465.jpeg",
+        "httpss://images.pexels.com/photos/3184465/pexels-photo-3184465.jpeg",
       description:
         "Boost your online presence with SEO, social media marketing, and more.",
       tasks: [
@@ -335,7 +335,7 @@ const useStore = create((set, get) => ({
           minPrice: 600,
           maxPrice: 900,
           image:
-            "https://electricenjin.com/img/cms/blogimageassets/What-You-Should-Know-About-Optimizing-Your-Website-for-Performance.jpg",
+            "httpss://electricenjin.com/img/cms/blogimageassets/What-You-Should-Know-About-Optimizing-Your-Website-for-Performance.jpg",
         },
         {
           id: 2,
@@ -343,7 +343,7 @@ const useStore = create((set, get) => ({
           minPrice: 400,
           maxPrice: 700,
           image:
-            "https://static1.makeuseofimages.com/wordpress/wp-content/uploads/2024/08/some-3d-social-media-icons.jpg",
+            "httpss://static1.makeuseofimages.com/wordpress/wp-content/uploads/2024/08/some-3d-social-media-icons.jpg",
         },
         {
           id: 3,
@@ -351,7 +351,7 @@ const useStore = create((set, get) => ({
           minPrice: 250,
           maxPrice: 900,
           image:
-            "https://growthfolks.io/wp-content/uploads/2024/04/video-content-creation-1024x585.png",
+            "httpss://growthfolks.io/wp-content/uploads/2024/04/video-content-creation-1024x585.png",
         },
       ],
     },
@@ -359,7 +359,7 @@ const useStore = create((set, get) => ({
       id: 4,
       name: "Automation",
       image:
-        "https://images.pexels.com/photos/3184296/pexels-photo-3184296.jpeg",
+        "httpss://images.pexels.com/photos/3184296/pexels-photo-3184296.jpeg",
       description:
         "Consult with experts to develop strategies for business and technology.",
       tasks: [
@@ -369,7 +369,7 @@ const useStore = create((set, get) => ({
           minPrice: 999,
           maxPrice: 1499,
           image:
-            "https://herculeschess.com/wp-content/themes/herculeschess/images/what-chess-puzzles.jpg",
+            "httpss://herculeschess.com/wp-content/themes/herculeschess/images/what-chess-puzzles.jpg",
         },
         {
           id: 2,
@@ -377,7 +377,7 @@ const useStore = create((set, get) => ({
           minPrice: 850,
           maxPrice: 1200,
           image:
-            "https://savvycomsoftware.com/wp-content/uploads/2021/03/tech-consulting-services-4.jpg",
+            "httpss://savvycomsoftware.com/wp-content/uploads/2021/03/tech-consulting-services-4.jpg",
         },
       ],
     },
@@ -395,7 +395,7 @@ const useStore = create((set, get) => ({
       content:
         "Many of us today are living at a fast pace, and we can ﬁnd ourselves overwhelmed by constant demands and distractions. Someone juggling multiple responsibilities, such as a working parent, a student balancing academic and personal life, or a professional facing burnout, might particularly beneﬁt from mindfulness. They may feel disconnected from the present moment, burdened by stress, and unable to fully engage with their surroundings or their professional life. Mindfulness offers them a way to ground, reduce anxiety, and ﬁnd clarity amid chaosResearch has consistently shown that practicing mindfulness can signiﬁcantly improve functionality, particularly in individuals with chronic illnesses, chronic pain, and even neurodegenerative conditions like dementia and Alzheimer’s. Dr. Ellen Langer’s groundbreaking work at the Langer Lab has also explored mindfulness across multiple domains, including health, business, and education, with compelling results.In one fascinating study involving professional salespeople, two groups were instructed to engage with potential clients in contrasting ways—one group mindfully, the other ‘mindlessly’. The mindful group saw noticeably higher sales, demonstrating that mindfulness enhances focus, engagement, and overall productivity. This principle extends beyond sales, helping individuals and companies alike boost performance and maintain focus.",
       image:
-        "https://images.pexels.com/photos/289586/pexels-photo-289586.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+        "httpss://images.pexels.com/photos/289586/pexels-photo-289586.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
     },
     {
       id: 2,
@@ -409,7 +409,7 @@ const useStore = create((set, get) => ({
       content:
         "Many of us today are living at a fast pace, and we can ﬁnd ourselves overwhelmed by constant demands and distractions. Someone juggling multiple responsibilities, such as a working parent, a student balancing academic and personal life, or a professional facing burnout, might particularly beneﬁt from mindfulness. They may feel disconnected from the present moment, burdened by stress, and unable to fully engage with their surroundings or their professional life. Mindfulness offers them a way to ground, reduce anxiety, and ﬁnd clarity amid chaosResearch has consistently shown that practicing mindfulness can signiﬁcantly improve functionality, particularly in individuals with chronic illnesses, chronic pain, and even neurodegenerative conditions like dementia and Alzheimer’s. Dr. Ellen Langer’s groundbreaking work at the Langer Lab has also explored mindfulness across multiple domains, including health, business, and education, with compelling results.In one fascinating study involving professional salespeople, two groups were instructed to engage with potential clients in contrasting ways—one group mindfully, the other ‘mindlessly’. The mindful group saw noticeably higher sales, demonstrating that mindfulness enhances focus, engagement, and overall productivity. This principle extends beyond sales, helping individuals and companies alike boost performance and maintain focus.",
       image:
-        "https://images.pexels.com/photos/1292464/pexels-photo-1292464.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+        "httpss://images.pexels.com/photos/1292464/pexels-photo-1292464.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
     },
     // Add more sample blog posts here
   ],
@@ -417,9 +417,9 @@ const useStore = create((set, get) => ({
   // Services actions
   getServices: async (categoryId) => {
     try {
-      let url = `http://${serverIp}:4000/api/service/fetchByCategory`;
+      let url = `https://${serverIp}:4000/api/service/fetchByCategory`;
       if (categoryId) {
-        url = `http://${serverIp}:4000/api/service/fetchByCategory/${categoryId}`;
+        url = `https://${serverIp}:4000/api/service/fetchByCategory/${categoryId}`;
       }
       const response = await axios.get(url);
       set({ services: response.data.services });
@@ -439,7 +439,7 @@ const useStore = create((set, get) => ({
   ) => {
     try {
       const response = await axios.post(
-        `http://${serverIp}:4000/api/service/addNew`,
+        `https://${serverIp}:4000/api/service/addNew`,
         { name, categoryId, minPrice, maxPrice, imageUrl, description, tags }
       );
       return response.success;
@@ -458,7 +458,7 @@ const useStore = create((set, get) => ({
   ) => {
     try {
       const response = await axios.put(
-        `http://${serverIp}:4000/api/service/update`,
+        `https://${serverIp}:4000/api/service/update`,
         { id, name, minPrice, maxPrice, imageUrl, description, tags }
       );
       return response.success;
@@ -469,7 +469,7 @@ const useStore = create((set, get) => ({
   deleteService: async (id) => {
     try {
       const response = await axios.delete(
-        `http://${serverIp}:4000/api/service/delete/${id}`
+        `https://${serverIp}:4000/api/service/delete/${id}`
       );
       console.log(id);
       return response.success;
@@ -481,7 +481,7 @@ const useStore = create((set, get) => ({
   addFAQ: async (serviceId, question, answer) => {
     try {
       const response = await axios.post(
-        `http://${serverIp}:4000/api/service/${serviceId}/faqs`,
+        `https://${serverIp}:4000/api/service/${serviceId}/faqs`,
         { question, answer }
       );
 
@@ -501,7 +501,7 @@ const useStore = create((set, get) => ({
   updateFAQ: async (serviceId, faqId, question, answer) => {
     try {
       const response = await axios.put(
-        `http://${serverIp}:4000/api/service/${serviceId}/faqs/${faqId}`,
+        `https://${serverIp}:4000/api/service/${serviceId}/faqs/${faqId}`,
         { question, answer }
       );
       if (response.data.success) {
@@ -521,7 +521,7 @@ const useStore = create((set, get) => ({
   deleteFAQ: async (serviceId, faqId) => {
     try {
       const response = await axios.delete(
-        `http://${serverIp}:4000/api/service/${serviceId}/faqs/${faqId}`
+        `https://${serverIp}:4000/api/service/${serviceId}/faqs/${faqId}`
       );
       set((state) => ({
         services: state.services.map((service) =>
@@ -543,7 +543,7 @@ const useStore = create((set, get) => ({
   getAllReviews: async () => {
     try {
       const response = await axios.get(
-        `http://${serverIp}:4000/api/review/getAll`
+        `https://${serverIp}:4000/api/review/getAll`
       );
       set({ reviews: response.data.reviews });
     } catch (error) {
@@ -553,7 +553,7 @@ const useStore = create((set, get) => ({
   getAverageRating: async (serviceId) => {
     try {
       const response = await axios.get(
-        `http://${serverIp}:4000/api/review/averageRating/${serviceId}`
+        `https://${serverIp}:4000/api/review/averageRating/${serviceId}`
       );
       return response.data;
     } catch (error) {
@@ -563,7 +563,7 @@ const useStore = create((set, get) => ({
   getReviewsByService: async (serviceId) => {
     try {
       const response = await axios.get(
-        `http://${serverIp}:4000/api/review/getBy/service/${serviceId}`
+        `https://${serverIp}:4000/api/review/getBy/service/${serviceId}`
       );
       return response.data.reviews;
     } catch (error) {
@@ -573,7 +573,7 @@ const useStore = create((set, get) => ({
   getReviewByTask: async (taskId) => {
     try {
       const response = await axios.get(
-        `http://${serverIp}:4000/api/review/getBy/task/${taskId}`
+        `https://${serverIp}:4000/api/review/getBy/task/${taskId}`
       );
       return response.data.reviews[0];
     } catch (error) {
@@ -583,7 +583,7 @@ const useStore = create((set, get) => ({
   addReview: async (taskId, rating, description) => {
     try {
       const response = await axios.post(
-        `http://${serverIp}:4000/api/review/add/${taskId}`,
+        `https://${serverIp}:4000/api/review/add/${taskId}`,
         { rating, description }
       );
       return response.data.review;
@@ -594,7 +594,7 @@ const useStore = create((set, get) => ({
   updateReview: async (reviewId, rating, description) => {
     try {
       const response = await axios.put(
-        `http://${serverIp}:4000/api/review/update/${reviewId}`,
+        `https://${serverIp}:4000/api/review/update/${reviewId}`,
         {
           rating,
           description,
@@ -608,7 +608,7 @@ const useStore = create((set, get) => ({
   deleteReview: async (reviewId) => {
     try {
       const response = await axios.delete(
-        `http://${serverIp}:4000/api/review/delete/${reviewId}`
+        `https://${serverIp}:4000/api/review/delete/${reviewId}`
       );
       return response.data.success;
     } catch (error) {
@@ -620,7 +620,7 @@ const useStore = create((set, get) => ({
   addTask: async (serviceId, userId, message) => {
     try {
       const response = await axios.post(
-        `http://${serverIp}:4000/api/task/add`,
+        `https://${serverIp}:4000/api/task/add`,
         {
           serviceId,
           userId,
@@ -634,7 +634,7 @@ const useStore = create((set, get) => ({
   },
   getAllTasks: async () => {
     try {
-      const response = await axios.get(`http://${serverIp}:4000/api/task/get`);
+      const response = await axios.get(`https://${serverIp}:4000/api/task/get`);
       set({ tasks: response.data.tasks });
     } catch (error) {
       throw new Error(error.message);
@@ -643,7 +643,7 @@ const useStore = create((set, get) => ({
   getTasksByStatus: async (status) => {
     try {
       const response = await axios.get(
-        `http://${serverIp}:4000/api/task/getByStatus/${status}`
+        `https://${serverIp}:4000/api/task/getByStatus/${status}`
       );
       set({ tasks: response.data.tasks });
     } catch (error) {
@@ -653,7 +653,7 @@ const useStore = create((set, get) => ({
   getTasksByUser: async (id) => {
     try {
       const response = await axios.get(
-        `http://${serverIp}:4000/api/task/getByUser/${id}`
+        `https://${serverIp}:4000/api/task/getByUser/${id}`
       );
       set({ tasks: response.data.tasks });
     } catch (error) {
@@ -662,7 +662,7 @@ const useStore = create((set, get) => ({
   },
   updateTaskStatus: async (id, newStatus) => {
     try {
-      await axios.put(`http://${serverIp}:4000/api/task/update`, {
+      await axios.put(`https://${serverIp}:4000/api/task/update`, {
         id,
         newStatus,
       });
@@ -672,7 +672,7 @@ const useStore = create((set, get) => ({
   },
   deleteTask: async (id) => {
     try {
-      await axios.delete(`http://${serverIp}:4000/api/task/delete/${id}`);
+      await axios.delete(`https://${serverIp}:4000/api/task/delete/${id}`);
     } catch (error) {
       throw new Error(error.message);
     }
@@ -681,7 +681,7 @@ const useStore = create((set, get) => ({
   getPaymentsByUser: async (userId) => {
     try {
       const response = await axios.get(
-        `http://${serverIp}:4000/api/payment/fetch/${userId}`
+        `https://${serverIp}:4000/api/payment/fetch/${userId}`
       );
       set({ payments: response.data.data });
       // console.log(response.data.data);
@@ -692,7 +692,7 @@ const useStore = create((set, get) => ({
   getPaymentsByTask: async (taskId) => {
     try {
       const response = await axios.get(
-        `http://${serverIp}:4000/api/payment/fetchByTask/${taskId}`
+        `https://${serverIp}:4000/api/payment/fetchByTask/${taskId}`
       );
       set({ payments: response.data.payments });
       return response.data.task;
@@ -703,7 +703,7 @@ const useStore = create((set, get) => ({
   addPayments: async (taskId, amount, milestone, description, dueDate) => {
     try {
       const response = await axios.post(
-        `http://${serverIp}:4000/api/payment/addNew`,
+        `https://${serverIp}:4000/api/payment/addNew`,
         {
           task: taskId,
           amount,
@@ -720,7 +720,7 @@ const useStore = create((set, get) => ({
   deletePayment: async (paymentId) => {
     try {
       const response = await axios.delete(
-        `http://${serverIp}:4000/api/payment/delete/${paymentId}`
+        `https://${serverIp}:4000/api/payment/delete/${paymentId}`
       );
       console.log(response);
     } catch (error) {
@@ -730,7 +730,7 @@ const useStore = create((set, get) => ({
   updatePayment: async (paymentId, amount, milestone, description, dueDate) => {
     try {
       const response = await axios.post(
-        `http://${serverIp}:4000/api/payment/update`,
+        `https://${serverIp}:4000/api/payment/update`,
         {
           paymentId,
           amount,
