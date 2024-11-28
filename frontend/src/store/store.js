@@ -7,6 +7,8 @@ import { Trophy } from "lucide-react";
 
 axios.defaults.withCredentials = true;
 
+const serverIp = "16.171.247.39";
+
 const useStore = create((set, get) => ({
   user: null,
   isAuthenticated: false,
@@ -23,7 +25,7 @@ const useStore = create((set, get) => ({
   login: async (email, password) => {
     try {
       const response = await axios.post(
-        "http://localhost:4000/api/user/login",
+        "http://16.171.247.39:4000/api/user/login",
         {
           email,
           password,
@@ -43,7 +45,7 @@ const useStore = create((set, get) => ({
   updatePwd: async (userId, oldPassword, newPassword) => {
     try {
       const response = await axios.post(
-        "http://localhost:4000/api/user/updatePwd",
+        `http://${serverIp}:4000/api/user/updatePwd`,
         { userId, oldPassword, newPassword }
       );
       set({ user: response.data.user, error: null, isLoggedIn: true });
@@ -61,7 +63,7 @@ const useStore = create((set, get) => ({
     console.log(phone);
     try {
       const response = await axios.post(
-        "http://localhost:4000/api/user/update",
+        `http://${serverIp}:4000/api/user/update`,
         {
           userId,
           lastName,
@@ -84,7 +86,7 @@ const useStore = create((set, get) => ({
   signup: async (firstName, lastName, email, password) => {
     try {
       const response = await axios.post(
-        "http://localhost:4000/api/user/signup",
+        `http://${serverIp}:4000/api/user/signup`,
         {
           firstName,
           lastName,
@@ -105,7 +107,7 @@ const useStore = create((set, get) => ({
   verifyEmail: async (verificationCode) => {
     try {
       const response = await axios.post(
-        "http://localhost:4000/api/user/verify",
+        `http://${serverIp}:4000/api/user/verify`,
         {
           code: verificationCode,
         }
@@ -120,7 +122,7 @@ const useStore = create((set, get) => ({
     set({ isCheckingAuth: true });
     try {
       const response = await axios.get(
-        "http://localhost:4000/api/user/check-auth"
+        `http://${serverIp}:4000/api/user/check-auth`
       );
       set({
         user: response.data.user,
@@ -135,7 +137,7 @@ const useStore = create((set, get) => ({
   getUser: async (userId) => {
     try {
       const response = await axios.post(
-        "http://localhost:4000/api/user/getUser",
+        `http://${serverIp}:4000/api/user/getUser`,
         {
           userId,
         }
@@ -152,7 +154,7 @@ const useStore = create((set, get) => ({
   },
   logout: async () => {
     try {
-      await axios.post("http://localhost:4000/api/user/logout");
+      await axios.post(`http://${serverIp}:4000/api/user/logout`);
       set({ user: null, isAuthenticated: false });
     } catch (error) {
       throw new Error(error.message);
@@ -161,7 +163,7 @@ const useStore = create((set, get) => ({
   forgotPassword: async (email) => {
     try {
       const response = await axios.post(
-        "http://localhost:4000/api/user/forgot-password",
+        `http://${serverIp}:4000/api/user/forgot-password`,
         {
           email,
         }
@@ -174,7 +176,7 @@ const useStore = create((set, get) => ({
   resetPassword: async (token, password) => {
     try {
       const response = await axios.post(
-        `http://localhost:4000/api/user/reset-password/${token}`,
+        `http://${serverIp}:4000/api/user/reset-password/${token}`,
         { password }
       );
     } catch (error) {
@@ -186,7 +188,7 @@ const useStore = create((set, get) => ({
   getAllCat: async () => {
     try {
       const response = await axios.get(
-        "http://localhost:4000/api/category/fetchAll"
+        `http://${serverIp}:4000/api/category/fetchAll`
       );
       set({ cat: response.data.categories });
       return response.data.categories;
@@ -202,7 +204,7 @@ const useStore = create((set, get) => ({
   addNewCat: async (name, imageUrl, navDisplay, description) => {
     try {
       const response = await axios.post(
-        "http://localhost:4000/api/category/add",
+        `http://${serverIp}:4000/api/category/add`,
         {
           name,
           imageUrl,
@@ -223,7 +225,7 @@ const useStore = create((set, get) => ({
   deleteCat: async (id) => {
     try {
       const response = await axios.post(
-        "http://localhost:4000/api/category/delete",
+        `http://${serverIp}:4000/api/category/delete`,
         {
           id,
         }
@@ -242,7 +244,7 @@ const useStore = create((set, get) => ({
   updateCat: async (id, name, imageUrl, navDisplay, description) => {
     try {
       const response = await axios.put(
-        "http://localhost:4000/api/category/update",
+        `http://${serverIp}:4000/api/category/update`,
         {
           id,
           name,
@@ -415,9 +417,9 @@ const useStore = create((set, get) => ({
   // Services actions
   getServices: async (categoryId) => {
     try {
-      let url = "http://localhost:4000/api/service/fetchByCategory";
+      let url = `http://${serverIp}:4000/api/service/fetchByCategory`;
       if (categoryId) {
-        url = `http://localhost:4000/api/service/fetchByCategory/${categoryId}`;
+        url = `http://${serverIp}:4000/api/service/fetchByCategory/${categoryId}`;
       }
       const response = await axios.get(url);
       set({ services: response.data.services });
@@ -437,7 +439,7 @@ const useStore = create((set, get) => ({
   ) => {
     try {
       const response = await axios.post(
-        "http://localhost:4000/api/service/addNew",
+        `http://${serverIp}:4000/api/service/addNew`,
         { name, categoryId, minPrice, maxPrice, imageUrl, description, tags }
       );
       return response.success;
@@ -456,7 +458,7 @@ const useStore = create((set, get) => ({
   ) => {
     try {
       const response = await axios.put(
-        `http://localhost:4000/api/service/update`,
+        `http://${serverIp}:4000/api/service/update`,
         { id, name, minPrice, maxPrice, imageUrl, description, tags }
       );
       return response.success;
@@ -467,7 +469,7 @@ const useStore = create((set, get) => ({
   deleteService: async (id) => {
     try {
       const response = await axios.delete(
-        `http://localhost:4000/api/service/delete/${id}`
+        `http://${serverIp}:4000/api/service/delete/${id}`
       );
       console.log(id);
       return response.success;
@@ -479,7 +481,7 @@ const useStore = create((set, get) => ({
   addFAQ: async (serviceId, question, answer) => {
     try {
       const response = await axios.post(
-        `http://localhost:4000/api/service/${serviceId}/faqs`,
+        `http://${serverIp}:4000/api/service/${serviceId}/faqs`,
         { question, answer }
       );
 
@@ -499,7 +501,7 @@ const useStore = create((set, get) => ({
   updateFAQ: async (serviceId, faqId, question, answer) => {
     try {
       const response = await axios.put(
-        `http://localhost:4000/api/service/${serviceId}/faqs/${faqId}`,
+        `http://${serverIp}:4000/api/service/${serviceId}/faqs/${faqId}`,
         { question, answer }
       );
       if (response.data.success) {
@@ -519,7 +521,7 @@ const useStore = create((set, get) => ({
   deleteFAQ: async (serviceId, faqId) => {
     try {
       const response = await axios.delete(
-        `http://localhost:4000/api/service/${serviceId}/faqs/${faqId}`
+        `http://${serverIp}:4000/api/service/${serviceId}/faqs/${faqId}`
       );
       set((state) => ({
         services: state.services.map((service) =>
@@ -541,7 +543,7 @@ const useStore = create((set, get) => ({
   getAllReviews: async () => {
     try {
       const response = await axios.get(
-        "http://localhost:4000/api/review/getAll"
+        `http://${serverIp}:4000/api/review/getAll`
       );
       set({ reviews: response.data.reviews });
     } catch (error) {
@@ -551,7 +553,7 @@ const useStore = create((set, get) => ({
   getAverageRating: async (serviceId) => {
     try {
       const response = await axios.get(
-        `http://localhost:4000/api/review/averageRating/${serviceId}`
+        `http://${serverIp}:4000/api/review/averageRating/${serviceId}`
       );
       return response.data;
     } catch (error) {
@@ -561,7 +563,7 @@ const useStore = create((set, get) => ({
   getReviewsByService: async (serviceId) => {
     try {
       const response = await axios.get(
-        `http://localhost:4000/api/review/getBy/service/${serviceId}`
+        `http://${serverIp}:4000/api/review/getBy/service/${serviceId}`
       );
       return response.data.reviews;
     } catch (error) {
@@ -571,7 +573,7 @@ const useStore = create((set, get) => ({
   getReviewByTask: async (taskId) => {
     try {
       const response = await axios.get(
-        `http://localhost:4000/api/review/getBy/task/${taskId}`
+        `http://${serverIp}:4000/api/review/getBy/task/${taskId}`
       );
       return response.data.reviews[0];
     } catch (error) {
@@ -581,7 +583,7 @@ const useStore = create((set, get) => ({
   addReview: async (taskId, rating, description) => {
     try {
       const response = await axios.post(
-        `http://localhost:4000/api/review/add/${taskId}`,
+        `http://${serverIp}:4000/api/review/add/${taskId}`,
         { rating, description }
       );
       return response.data.review;
@@ -592,7 +594,7 @@ const useStore = create((set, get) => ({
   updateReview: async (reviewId, rating, description) => {
     try {
       const response = await axios.put(
-        `http://localhost:4000/api/review/update/${reviewId}`,
+        `http://${serverIp}:4000/api/review/update/${reviewId}`,
         {
           rating,
           description,
@@ -606,7 +608,7 @@ const useStore = create((set, get) => ({
   deleteReview: async (reviewId) => {
     try {
       const response = await axios.delete(
-        `http://localhost:4000/api/review/delete/${reviewId}`
+        `http://${serverIp}:4000/api/review/delete/${reviewId}`
       );
       return response.data.success;
     } catch (error) {
@@ -617,11 +619,14 @@ const useStore = create((set, get) => ({
   // Task actions
   addTask: async (serviceId, userId, message) => {
     try {
-      const response = await axios.post("http://localhost:4000/api/task/add", {
-        serviceId,
-        userId,
-        message,
-      });
+      const response = await axios.post(
+        `http://${serverIp}:4000/api/task/add`,
+        {
+          serviceId,
+          userId,
+          message,
+        }
+      );
       return response.success;
     } catch (error) {
       throw new Error(error.message);
@@ -629,7 +634,7 @@ const useStore = create((set, get) => ({
   },
   getAllTasks: async () => {
     try {
-      const response = await axios.get("http://localhost:4000/api/task/get");
+      const response = await axios.get(`http://${serverIp}:4000/api/task/get`);
       set({ tasks: response.data.tasks });
     } catch (error) {
       throw new Error(error.message);
@@ -638,7 +643,7 @@ const useStore = create((set, get) => ({
   getTasksByStatus: async (status) => {
     try {
       const response = await axios.get(
-        `http://localhost:4000/api/task/getByStatus/${status}`
+        `http://${serverIp}:4000/api/task/getByStatus/${status}`
       );
       set({ tasks: response.data.tasks });
     } catch (error) {
@@ -648,7 +653,7 @@ const useStore = create((set, get) => ({
   getTasksByUser: async (id) => {
     try {
       const response = await axios.get(
-        `http://localhost:4000/api/task/getByUser/${id}`
+        `http://${serverIp}:4000/api/task/getByUser/${id}`
       );
       set({ tasks: response.data.tasks });
     } catch (error) {
@@ -657,7 +662,7 @@ const useStore = create((set, get) => ({
   },
   updateTaskStatus: async (id, newStatus) => {
     try {
-      await axios.put("http://localhost:4000/api/task/update", {
+      await axios.put(`http://${serverIp}:4000/api/task/update`, {
         id,
         newStatus,
       });
@@ -667,7 +672,7 @@ const useStore = create((set, get) => ({
   },
   deleteTask: async (id) => {
     try {
-      await axios.delete(`http://localhost:4000/api/task/delete/${id}`);
+      await axios.delete(`http://${serverIp}:4000/api/task/delete/${id}`);
     } catch (error) {
       throw new Error(error.message);
     }
@@ -676,7 +681,7 @@ const useStore = create((set, get) => ({
   getPaymentsByUser: async (userId) => {
     try {
       const response = await axios.get(
-        `http://localhost:4000/api/payment/fetch/${userId}`
+        `http://${serverIp}:4000/api/payment/fetch/${userId}`
       );
       set({ payments: response.data.data });
       // console.log(response.data.data);
@@ -687,7 +692,7 @@ const useStore = create((set, get) => ({
   getPaymentsByTask: async (taskId) => {
     try {
       const response = await axios.get(
-        `http://localhost:4000/api/payment/fetchByTask/${taskId}`
+        `http://${serverIp}:4000/api/payment/fetchByTask/${taskId}`
       );
       set({ payments: response.data.payments });
       return response.data.task;
@@ -698,7 +703,7 @@ const useStore = create((set, get) => ({
   addPayments: async (taskId, amount, milestone, description, dueDate) => {
     try {
       const response = await axios.post(
-        "http://localhost:4000/api/payment/addNew",
+        `http://${serverIp}:4000/api/payment/addNew`,
         {
           task: taskId,
           amount,
@@ -715,7 +720,7 @@ const useStore = create((set, get) => ({
   deletePayment: async (paymentId) => {
     try {
       const response = await axios.delete(
-        `http://localhost:4000/api/payment/delete/${paymentId}`
+        `http://${serverIp}:4000/api/payment/delete/${paymentId}`
       );
       console.log(response);
     } catch (error) {
@@ -725,7 +730,7 @@ const useStore = create((set, get) => ({
   updatePayment: async (paymentId, amount, milestone, description, dueDate) => {
     try {
       const response = await axios.post(
-        "http://localhost:4000/api/payment/update",
+        `http://${serverIp}:4000/api/payment/update`,
         {
           paymentId,
           amount,
